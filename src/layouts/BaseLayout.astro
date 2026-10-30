@@ -1,0 +1,111 @@
+---
+import '../styles/global.css';
+import { createHash } from 'node:crypto';
+import { Font, getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import DemoBar from '../components/DemoBar.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { verein } from '../data/verein';
+import standardBild from '../assets/images/heimspiel.jpg';
+
+interface Props {
+  title: string;
+  description: string;
+  image?: ImageMetadata;
+  type?: 'website' | 'article';
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  krumen?: { name: string; href: string }[];
+}
+
+const { title, description, image = standardBild, type = 'website', jsonLd, krumen } = Astro.props;
+
+const seitenTitel = Astro.url.pathname === '/' ? `${verein.name} · ${verein.claim}` : `${title} · ${verein.kurzname}`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const og = await getImage({ src: image, width: 1200, height: 630, fit: 'cover', format: 'jpg', quality: 80 });
+const ogUrl = new URL(og.src, Astro.site);
+const standardOg = await getImage({ src: standardBild, width: 1200, height: 630, fit: 'cover', format: 'jpg', quality: 80 });
+
+const club = {
+  '@context': 'https://schema.org',
+  '@type': 'SportsClub',
+  '@id': `${Astro.site}#verein`,
+  name: verein.langname,
+  alternateName: verein.spitzname,
+  sport: 'Fußball',
+  url: Astro.site?.toString(),
+  telephone: verein.telefon,
+  email: verein.email,
+  foundingDate: String(verein.gruendung),
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: verein.strasse,
+    postalCode: verein.plz,
+    addressLocality: verein.ort,
+    addressCountry: 'DE',
+  },
+  image: new URL(standardOg.src, Astro.site).toString(),
+  logo: new URL('/favicon.svg', Astro.site).toString(),
+};
+
+const seitenDaten = (Array.isArray(jsonLd) ? jsonLd : jsonLd ? [{ ...jsonLd, image: ogUrl.toString() }] : []);
+
+const brotkrumen = krumen && {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [{ name: 'Start', href: '/' }, ...krumen, { name: title, href: Astro.url.pathname }].map((k, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: k.name,
+    item: new URL(k.href, Astro.site).toString(),
+  })),
+};
+
+// JSON-LD wird nicht ausgeführt, Validatoren werten es aber als Inline-Skript: Hash in die CSP aufnehmen.
+const strukturiert = [club, ...seitenDaten, brotkrumen].filter(Boolean).map((d) => JSON.stringify(d));
+for (const json of strukturiert) {
+  Astro.csp?.insertScriptHash(`sha256-${createHash('sha256').update(json).digest('base64')}`);
+}
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{seitenTitel}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="alternate" type="application/rss+xml" title={`Aktuelles · ${verein.kurzname}`} href="/rss.xml" />
+    <meta name="theme-color" content="#f6f4ef" />
+    <meta name="generator" content={Astro.generator} />
+
+    <meta property="og:type" content={type} />
+    <meta property="og:locale" content="de_DE" />
+    <meta property="og:site_name" content={verein.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <Font cssVariable="--font-display" preload />
+    <Font cssVariable="--font-body" preload />
+
+    {strukturiert.map((json) => <script type="application/ld+json" set:html={json} />)}
+  </head>
+  <body>
+    <a class="skip-link" href="#inhalt">Zum Inhalt springen</a>
+    <DemoBar />
+    <Header />
+    <main id="inhalt">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

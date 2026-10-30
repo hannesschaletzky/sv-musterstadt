@@ -1,0 +1,48 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageIntro from '../../components/PageIntro.astro';
+import NewsCard from '../../components/NewsCard.astro';
+
+const [neuester, ...weitere] = (await getCollection('aktuelles')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<BaseLayout
+  title="Aktuelles"
+  description="Spielberichte, Neuigkeiten aus der Jugend und alles, was im Verein passiert: die Meldungen des SV Musterstadt 1921."
+>
+  <PageIntro
+    eyebrow="Aktuelles"
+    title="Neues vom <em>Mühlbach</em>"
+    lead="Spielberichte vom Wochenende, Neuigkeiten aus der Jugend und alles, was sonst im Verein passiert."
+  />
+
+  <section class="section container aktuelles" aria-label="Meldungen">
+    {neuester && <NewsCard beitrag={neuester} gross ebene="h2" eager />}
+    <div class="raster">
+      {weitere.map((b) => <NewsCard beitrag={b} ebene="h2" />)}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .aktuelles {
+    display: grid;
+    gap: clamp(3.5rem, 2.5rem + 3vw, 5rem);
+  }
+  .raster {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3.5rem 2rem;
+  }
+  @media (max-width: 64rem) {
+    .raster {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 40rem) {
+    .raster {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

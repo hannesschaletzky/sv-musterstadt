@@ -1,0 +1,382 @@
+---
+import { Picture } from 'astro:assets';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import TeamCard from '../../components/TeamCard.astro';
+import Spielkarte from '../../components/Spielkarte.astro';
+import MitmachenCta from '../../components/MitmachenCta.astro';
+import Arrow from '../../components/Arrow.astro';
+import { verein } from '../../data/verein';
+import { naechstesSpiel } from '../../data/saison';
+
+export async function getStaticPaths() {
+  const teams = await getCollection('mannschaften');
+  return teams.map((team) => ({ params: { slug: team.id }, props: { team } }));
+}
+
+interface Props {
+  team: CollectionEntry<'mannschaften'>;
+}
+
+const { team } = Astro.props;
+const { Content } = await render(team);
+const { title, description, altersklasse, liga, image, imageAlt, trainer, training, kader } = team.data;
+
+const andere = (await getCollection('mannschaften'))
+  .filter((t) => t.id !== team.id)
+  .sort((a, b) => Math.abs(a.data.order - team.data.order) - Math.abs(b.data.order - team.data.order))
+  .slice(0, 3)
+  .sort((a, b) => a.data.order - b.data.order);
+
+const positionen = ['Tor', 'Abwehr', 'Mittelfeld', 'Sturm'] as const;
+const istErste = team.id === 'erste-herren';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SportsTeam',
+  name: `${verein.name} ${title}`,
+  sport: 'Fußball',
+  description,
+  memberOf: { '@id': `${Astro.site}#verein` },
+  coach: trainer.map((t) => ({ '@type': 'Person', name: t.name })),
+  ...(kader.length && { athlete: kader.map((s) => ({ '@type': 'Person', name: s.name })) }),
+};
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  image={image}
+  jsonLd={jsonLd}
+  krumen={[{ name: 'Mannschaften', href: '/mannschaften/' }]}
+>
+  <section class="kopfbild nacht">
+    <div class="kopfbild__bild">
+      <Picture
+        src={image}
+        alt={imageAlt}
+        widths={[640, 960, 1400, 1900]}
+        sizes="100vw"
+        formats={['avif', 'webp']}
+        loading="eager"
+        fetchpriority="high"
+      />
+    </div>
+    <div class="container kopfbild__text">
+      <nav aria-label="Brotkrumen" class="krumen">
+        <a href="/mannschaften/">Mannschaften</a>
+      </nav>
+      <h1 class="display">{title}</h1>
+      <p class="kopfbild__meta">{altersklasse} · {liga}</p>
+    </div>
+  </section>
+
+  <div class="section container team">
+    <div class="team__text">
+      <p class="lead">{description}</p>
+      <div class="prose">
+        <Content />
+      </div>
+    </div>
+
+    <aside class="team__infos" aria-label="Training und Ansprechpersonen">
+      <div class="info">
+        <h2 class="info__titel">Training</h2>
+        <ul class="training">
+          {
+            training.map((t) => (
+              <li>
+                <span class="training__tag">{t.tag}</span>
+                <span class="zahlen">{t.zeit}</span>
+                <span class="training__platz">{t.platz}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <div class="info">
+        <h2 class="info__titel">Trainerteam</h2>
+        <ul class="trainer">
+          {
+            trainer.map((t) => (
+              <li>
+                <span class="trainer__initialen" aria-hidden="true">
+                  {t.name
+                    .split(' ')
+                    .map((n) => n[0])
+                    .join('')}
+                </span>
+                <span>
+                  <strong>{t.name}</strong>
+                  <br />
+                  {t.rolle}
+                </span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <a href={`/mitmachen/?team=${team.id}#antrag`} class="btn btn--rot">Probetraining anfragen <Arrow /></a>
+    </aside>
+  </div>
+
+  {
+    istErste && (
+      <section class="section--tight container" aria-label="Nächstes Spiel">
+        <Spielkarte spiel={naechstesSpiel} label="Nächstes Spiel" />
+        <p class="spielplan-link">
+          <a href="/spielplan/" class="link-pfeil">
+            Spielplan und Tabelle <Arrow />
+          </a>
+        </p>
+      </section>
+    )
+  }
+
+  {
+    kader.length > 0 && (
+      <section class="section getoent" aria-labelledby="kader-titel">
+        <div class="container">
+          <div class="kopf">
+            <div>
+              <span class="eyebrow">Saison 2026/27</span>
+              <h2 id="kader-titel" class="h2">Kader</h2>
+            </div>
+          </div>
+          <div class="kader">
+            {positionen.map((p) => (
+              <div class="kader__gruppe">
+                <h3 class="kader__position">{p}</h3>
+                <ul>
+                  {kader
+                    .filter((s) => s.position === p)
+                    .sort((a, b) => a.nr - b.nr)
+                    .map((s) => (
+                      <li>
+                        <span class="kader__nr zahlen">
+                          <span class="visually-hidden">Nummer </span>
+                          {s.nr}
+                        </span>
+                        <span>{s.name}</span>
+                      </li>
+                    ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="section container" aria-labelledby="andere-titel">
+    <div class="kopf">
+      <div>
+        <span class="eyebrow">Mannschaften</span>
+        <h2 id="andere-titel" class="h2">Auch im Verein</h2>
+      </div>
+      <a href="/mannschaften/" class="link-pfeil">Alle Mannschaften <Arrow /></a>
+    </div>
+    <div class="raster">
+      {andere.map((t) => <TeamCard team={t} />)}
+    </div>
+  </section>
+
+  <MitmachenCta />
+</BaseLayout>
+
+<style>
+  .kopfbild {
+    position: relative;
+    display: grid;
+    min-height: clamp(26rem, 60vh, 40rem);
+    isolation: isolate;
+    border-bottom: 6px solid var(--rot);
+  }
+  .kopfbild__bild {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+  }
+  .kopfbild__bild :global(picture),
+  .kopfbild__bild :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .kopfbild__bild::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(0deg, rgb(10 12 16 / 0.9) 0%, rgb(10 12 16 / 0.35) 55%, rgb(10 12 16 / 0.1) 100%);
+  }
+  .kopfbild__text {
+    display: grid;
+    gap: 1rem;
+    align-content: end;
+    padding-block: 3rem;
+  }
+  .krumen a {
+    font-family: var(--font-display-stack);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--rot-hell);
+  }
+  .krumen a::before {
+    content: '← ';
+  }
+  .krumen a:hover {
+    text-decoration: underline;
+  }
+  .kopfbild__meta {
+    font-size: var(--step-1);
+    color: #e3e6ea;
+  }
+
+  .team {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: clamp(2rem, 1rem + 4vw, 5rem);
+    align-items: start;
+  }
+  .team__text {
+    display: grid;
+    gap: 2rem;
+  }
+  .team__text .lead {
+    color: var(--ink);
+  }
+  .team__infos {
+    position: sticky;
+    top: 7rem;
+    display: grid;
+    gap: 1.75rem;
+    justify-items: start;
+    padding: 1.75rem;
+    background: var(--kreide-2);
+    border-top: 5px solid var(--rot);
+    border-radius: var(--radius);
+  }
+  .info {
+    width: 100%;
+  }
+  .info__titel {
+    font-size: 1.35rem;
+    margin-bottom: 0.9rem;
+  }
+  .training,
+  .trainer {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.75rem;
+  }
+  .training li {
+    display: grid;
+    grid-template-columns: 7rem 1fr;
+    gap: 0 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .training__tag {
+    font-weight: 600;
+    grid-row: span 2;
+  }
+  .training__platz {
+    font-size: 0.9rem;
+    color: var(--ink-3);
+  }
+  .trainer li {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    line-height: 1.35;
+    font-size: 0.95rem;
+  }
+  .trainer strong {
+    font-weight: 600;
+  }
+  .trainer__initialen {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    flex: none;
+    border-radius: 50%;
+    background: var(--nacht);
+    color: var(--on-nacht);
+    font-family: var(--font-display-stack);
+    font-weight: 800;
+    font-size: 1.1rem;
+  }
+  .spielplan-link {
+    margin-top: 1.25rem;
+  }
+
+  .kader {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+  }
+  .kader__position {
+    font-size: 1.35rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 3px solid var(--ink);
+    margin-bottom: 0.4rem;
+  }
+  .kader ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .kader li {
+    display: flex;
+    align-items: baseline;
+    gap: 0.9rem;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .kader__nr {
+    min-width: 1.8rem;
+    font-family: var(--font-display-stack);
+    font-weight: 800;
+    font-size: 1.3rem;
+    color: var(--rot);
+  }
+
+  .raster {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+
+  @media (max-width: 64rem) {
+    .team {
+      grid-template-columns: 1fr;
+    }
+    .team__infos {
+      position: static;
+    }
+    .kader {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .raster {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .raster > :global(:nth-child(3)) {
+      display: none;
+    }
+  }
+  @media (max-width: 40rem) {
+    .kader,
+    .raster {
+      grid-template-columns: 1fr;
+    }
+    .raster > :global(:nth-child(3)) {
+      display: grid;
+    }
+  }
+</style>

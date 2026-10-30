@@ -1,0 +1,60 @@
+---
+import { Picture } from 'astro:assets';
+import Arrow from './Arrow.astro';
+import bild from '../assets/images/schuhe-ball.jpg';
+
+interface Props {
+  title?: string;
+  text?: string;
+}
+const {
+  title = 'Schuhe schnüren, <span class="akzent">vorbeikommen.</span>',
+  text = 'Probetraining ist bei uns in jeder Mannschaft kostenlos und ohne Anmeldung. Einfach zur Trainingszeit am Platz sein, den Rest klären wir dort.',
+} = Astro.props;
+---
+
+<section class="cta nacht" aria-labelledby="cta-titel">
+  <div class="cta__bild img-frame">
+    <Picture src={bild} alt="" widths={[480, 800, 1200]} sizes="(min-width: 60rem) 40vw, 100vw" formats={['avif', 'webp']} />
+  </div>
+  <div class="cta__text">
+    <span class="eyebrow">Mitmachen</span>
+    <h2 id="cta-titel" class="h2" set:html={title} />
+    <p class="lead">{text}</p>
+    <div class="cta__aktionen">
+      <a href="/mitmachen/" class="btn btn--rot">Mitglied werden <Arrow /></a>
+      <a href="/mannschaften/" class="btn btn--rand">Trainingszeiten</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    min-height: 34rem;
+  }
+  .cta__bild {
+    border-radius: 0;
+  }
+  .cta__text {
+    display: grid;
+    align-content: center;
+    gap: 1.5rem;
+    padding: var(--section) var(--gutter);
+    max-width: 44rem;
+  }
+  .cta__aktionen {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  @media (max-width: 60rem) {
+    .cta {
+      grid-template-columns: 1fr;
+    }
+    .cta__bild {
+      aspect-ratio: 16 / 9;
+    }
+  }
+</style>

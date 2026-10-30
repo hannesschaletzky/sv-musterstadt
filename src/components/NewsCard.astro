@@ -1,0 +1,106 @@
+---
+import { Picture } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import { datum } from '../data/verein';
+
+interface Props {
+  beitrag: CollectionEntry<'aktuelles'>;
+  gross?: boolean;
+  ebene?: 'h2' | 'h3';
+  eager?: boolean;
+}
+const { beitrag, gross = false, ebene = 'h3', eager = false } = Astro.props;
+const { title, description, date, rubrik, image, imageAlt } = beitrag.data;
+const Ueberschrift = ebene;
+---
+
+<article class:list={['news', { 'news--gross': gross }]}>
+  <div class="img-frame hover-zoom news__bild">
+    <Picture
+      src={image}
+      alt={imageAlt}
+      widths={gross ? [400, 560, 720, 1100, 1600] : [360, 480, 560, 720, 800]}
+      sizes={gross ? '(min-width: 64rem) 58vw, 92vw' : '(min-width: 64rem) 30vw, (min-width: 40rem) 46vw, 92vw'}
+      formats={['avif', 'webp']}
+      loading={eager ? 'eager' : 'lazy'}
+      fetchpriority={eager ? 'high' : 'auto'}
+    />
+  </div>
+  <div class="news__text">
+    <p class="news__meta">
+      <span class="news__rubrik">{rubrik}</span>
+      <time datetime={date.toISOString().slice(0, 10)}>{datum(date)}</time>
+    </p>
+    <Ueberschrift class="news__titel">
+      <a href={`/aktuelles/${beitrag.id}/`}>{title}</a>
+    </Ueberschrift>
+    {gross && <p class="news__teaser">{description}</p>}
+  </div>
+</article>
+
+<style>
+  .news {
+    position: relative;
+    display: grid;
+    gap: 1.1rem;
+    align-content: start;
+  }
+  .news__bild {
+    aspect-ratio: 3 / 2;
+  }
+  .news__text {
+    display: grid;
+    gap: 0.6rem;
+  }
+  .news__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+    font-size: 0.85rem;
+    color: var(--ink-3);
+  }
+  .news__rubrik {
+    padding: 0.15rem 0.5rem 0.1rem;
+    background: var(--rot);
+    color: #fff;
+    font-family: var(--font-display-stack);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .news__titel {
+    font-size: var(--step-2);
+    line-height: 1;
+  }
+  .news__titel a {
+    text-decoration: none;
+  }
+  .news__titel a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  .news:hover .news__titel a,
+  .news__titel a:focus-visible {
+    text-decoration: underline;
+    text-decoration-color: var(--rot);
+    text-decoration-thickness: 3px;
+  }
+  .news__teaser {
+    color: var(--ink-2);
+  }
+  .news--gross .news__titel {
+    font-size: var(--step-3);
+  }
+  @media (min-width: 64rem) {
+    .news--gross {
+      grid-template-columns: 1.5fr 1fr;
+      align-items: end;
+      gap: 2.5rem;
+    }
+    .news--gross .news__bild {
+      aspect-ratio: 16 / 10;
+    }
+  }
+</style>

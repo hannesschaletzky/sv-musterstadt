@@ -1,0 +1,83 @@
+---
+import { Picture } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  team: CollectionEntry<'mannschaften'>;
+  ebene?: 'h2' | 'h3';
+  eager?: boolean;
+}
+const { team, ebene = 'h3', eager = false } = Astro.props;
+const { title, altersklasse, liga, image, imageAlt } = team.data;
+const Ueberschrift = ebene;
+---
+
+<article class="team" data-bereich={team.data.bereich}>
+  <div class="img-frame hover-zoom team__bild">
+    <Picture
+      src={image}
+      alt={imageAlt}
+      widths={[360, 480, 560, 720, 800]}
+      sizes="(min-width: 64rem) 30vw, (min-width: 40rem) 46vw, 92vw"
+      formats={['avif', 'webp']}
+      loading={eager ? 'eager' : 'lazy'}
+      fetchpriority={eager ? 'high' : 'auto'}
+    />
+  </div>
+  <div class="team__text">
+    <Ueberschrift class="team__titel">
+      <a href={`/mannschaften/${team.id}/`}>{title}</a>
+    </Ueberschrift>
+    <p class="team__meta">{altersklasse} · {liga}</p>
+  </div>
+</article>
+
+<style>
+  .team {
+    position: relative;
+    display: grid;
+    background: var(--nacht);
+    color: var(--on-nacht);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .team__bild {
+    aspect-ratio: 4 / 3;
+    border-radius: 0;
+  }
+  .team__text {
+    display: grid;
+    gap: 0.4rem;
+    padding: 1.1rem 1.25rem 1.3rem;
+    border-top: 4px solid var(--rot);
+  }
+  .team__titel {
+    font-size: var(--step-2);
+    line-height: 1;
+  }
+  .team__titel a {
+    text-decoration: none;
+  }
+  .team__titel a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  .team:hover .team__titel a,
+  .team__titel a:focus-visible {
+    text-decoration: underline;
+    text-decoration-thickness: 3px;
+    text-decoration-color: var(--rot-hell);
+  }
+  .team__titel a:focus-visible {
+    outline: none;
+  }
+  .team:has(a:focus-visible) {
+    outline: 3px solid var(--rot);
+    outline-offset: 3px;
+  }
+  .team__meta {
+    font-size: 0.9rem;
+    color: var(--on-nacht-2);
+  }
+</style>

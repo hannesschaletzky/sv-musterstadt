@@ -1,0 +1,291 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageIntro from '../components/PageIntro.astro';
+import Spielkarte from '../components/Spielkarte.astro';
+import Tabelle from '../components/Tabelle.astro';
+import Form from '../components/Form.astro';
+import { verein } from '../data/verein';
+import {
+  spiele,
+  offen,
+  naechstesSpiel,
+  form,
+  eigeneZeile,
+  liga,
+  saison,
+  heimspielort,
+  ausgang,
+  heimTeam,
+  gastTeam,
+  tore,
+  wochentag,
+  tagMonat,
+  uhrzeit,
+} from '../data/saison';
+
+const ausgangLang = { S: 'Sieg', U: 'Unentschieden', N: 'Niederlage' };
+
+const ereignisse = offen.map((s) => ({
+  '@context': 'https://schema.org',
+  '@type': 'SportsEvent',
+  name: `${heimTeam(s)} – ${gastTeam(s)}`,
+  sport: 'Fußball',
+  startDate: s.anstoss.toISOString(),
+  eventStatus: 'https://schema.org/EventScheduled',
+  homeTeam: { '@type': 'SportsTeam', name: heimTeam(s) },
+  awayTeam: { '@type': 'SportsTeam', name: gastTeam(s) },
+  location: s.heim
+    ? {
+        '@type': 'Place',
+        name: heimspielort,
+        address: { '@type': 'PostalAddress', streetAddress: verein.strasse, postalCode: verein.plz, addressLocality: verein.ort, addressCountry: 'DE' },
+      }
+    : { '@type': 'Place', name: `Sportplatz ${s.gegner}` },
+}));
+---
+
+<BaseLayout
+  title="Spielplan & Tabelle"
+  description={`Alle Spiele, Ergebnisse und die aktuelle Tabelle der 1. Herren des SV Musterstadt in der ${liga}, Saison ${saison}.`}
+  jsonLd={ereignisse}
+>
+  <PageIntro
+    eyebrow={`1. Herren · Saison ${saison}`}
+    title="Spielplan <em>&amp;</em> Tabelle"
+    lead={`Alle Spiele der Hinrunde in der ${liga}. Heimspiele finden im ${heimspielort} statt, Eintritt 4 €, Kinder und Mitglieder frei.`}
+  />
+
+  <section class="section container oben" aria-label="Aktueller Stand">
+    <Spielkarte spiel={naechstesSpiel} label="Nächstes Spiel" />
+    <dl class="stand zahlen">
+      <div>
+        <dt>Tabellenplatz</dt>
+        <dd>{eigeneZeile.platz}.</dd>
+      </div>
+      <div>
+        <dt>Punkte</dt>
+        <dd>{eigeneZeile.punkte}</dd>
+      </div>
+      <div>
+        <dt>Tore</dt>
+        <dd>{`${eigeneZeile.tore}:${eigeneZeile.gegentore}`}</dd>
+      </div>
+      <div>
+        <dt>Form</dt>
+        <dd><Form form={form} /></dd>
+      </div>
+    </dl>
+  </section>
+
+  <section class="section getoent" aria-labelledby="spiele-titel">
+    <div class="container">
+      <div class="kopf">
+        <div>
+          <span class="eyebrow">Hinrunde</span>
+          <h2 id="spiele-titel" class="h2">Alle Spiele</h2>
+        </div>
+      </div>
+      <div class="table-scroll">
+        <table class="spiele">
+          <caption class="visually-hidden">Spiele der 1. Herren in der Hinrunde {saison}</caption>
+          <thead>
+            <tr>
+              <th scope="col"><abbr title="Spieltag">Sp.</abbr></th>
+              <th scope="col">Datum</th>
+              <th scope="col" class="links">Paarung</th>
+              <th scope="col">Ergebnis</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              spiele.map((s) => {
+                const ergebnis = tore(s);
+                const a = s.ergebnis && ausgang(s.ergebnis);
+                return (
+                  <tr class:list={{ naechstes: s === naechstesSpiel }}>
+                    <td>{s.spieltag}</td>
+                    <td class="datum">
+                      <time datetime={s.anstoss.toISOString()}>
+                        {wochentag(s.anstoss)} {tagMonat(s.anstoss)}
+                        <span class="zeit">{uhrzeit(s.anstoss)}</span>
+                      </time>
+                    </td>
+                    <th scope="row" class="links paarung">
+                      <span class:list={{ eigen: s.heim }}>{heimTeam(s)}</span>
+                      <span class="gegen" aria-hidden="true">–</span>
+                      <span class:list={{ eigen: !s.heim }}>{gastTeam(s)}</span>
+                    </th>
+                    <td>
+                      {ergebnis && a ? (
+                        <span class:list={['ergebnis', `ergebnis--${a}`]}>
+                          {`${ergebnis[0]}:${ergebnis[1]}`}
+                          <span class="visually-hidden">{`, ${ausgangLang[a]}`}</span>
+                        </span>
+                      ) : (
+                        <span class="offen">{s === naechstesSpiel ? 'Nächstes' : 'offen'}</span>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="section container" id="tabelle" aria-labelledby="tabelle-titel">
+    <div class="kopf">
+      <div>
+        <span class="eyebrow">{liga}</span>
+        <h2 id="tabelle-titel" class="h2">Tabelle</h2>
+      </div>
+      <p class="hinweis">Stand nach dem {eigeneZeile.spiele}. Spieltag</p>
+    </div>
+    <Tabelle />
+  </section>
+</BaseLayout>
+
+<style>
+  .oben {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: clamp(1.5rem, 1rem + 2vw, 3rem);
+    align-items: center;
+  }
+  .stand {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin: 0;
+    border-top: 3px solid var(--ink);
+  }
+  .stand div {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 0.5rem;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .stand dt {
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .stand dd {
+    margin: 0;
+    font-family: var(--font-display-stack);
+    font-weight: 800;
+    font-size: var(--step-3);
+    line-height: 1;
+  }
+
+  .spiele {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .spiele th,
+  .spiele td {
+    padding: 0.9rem 0.75rem;
+    border-bottom: 1px solid var(--line);
+    text-align: center;
+    white-space: nowrap;
+  }
+  .spiele thead th {
+    font-family: var(--font-display-stack);
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    border-bottom-width: 2px;
+  }
+  .spiele abbr {
+    text-decoration: none;
+  }
+  .spiele .links {
+    text-align: left;
+    width: 100%;
+  }
+  .datum {
+    text-align: left;
+  }
+  .zeit {
+    margin-left: 0.4rem;
+    color: var(--ink-3);
+  }
+  .paarung {
+    font-weight: 400;
+  }
+  .paarung .eigen {
+    font-weight: 700;
+  }
+  .gegen {
+    padding-inline: 0.4rem;
+    color: var(--ink-3);
+  }
+  .naechstes {
+    background: color-mix(in srgb, var(--rot) 9%, transparent);
+  }
+  .naechstes .zeit {
+    color: var(--ink-2);
+  }
+  .ergebnis {
+    display: inline-block;
+    min-width: 3.6rem;
+    padding: 0.25rem 0.5rem 0.15rem;
+    border-radius: var(--radius);
+    font-family: var(--font-display-stack);
+    font-weight: 800;
+    font-size: 1.15rem;
+    color: #fff;
+  }
+  .ergebnis--S {
+    background: var(--rasen);
+  }
+  .ergebnis--U {
+    background: #6b7280;
+  }
+  .ergebnis--N {
+    background: var(--rot-2);
+  }
+  .offen {
+    font-size: 0.85rem;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .naechstes .offen {
+    color: var(--rot-2);
+    font-weight: 600;
+  }
+  .hinweis {
+    color: var(--ink-3);
+  }
+
+  @media (max-width: 60rem) {
+    .oben {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 40rem) {
+    .spiele th,
+    .spiele td {
+      padding-inline: 0.4rem;
+    }
+    .spiele .paarung {
+      white-space: normal;
+    }
+    .paarung span {
+      display: block;
+    }
+    .gegen {
+      display: none !important;
+    }
+    .zeit {
+      display: block;
+      margin: 0;
+    }
+  }
+</style>

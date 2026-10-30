@@ -1,0 +1,427 @@
+---
+import { Picture } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageIntro from '../components/PageIntro.astro';
+import MitmachenCta from '../components/MitmachenCta.astro';
+import { verein } from '../data/verein';
+
+import platzBild from '../assets/images/platz-abend.jpg';
+import schneeBild from '../assets/images/flutlicht-schnee.jpg';
+import zweikampfBild from '../assets/images/zweikampf.jpg';
+
+const geschichte = [
+  { jahr: '1921', text: '23 Arbeiter der Musterstädter Papierfabrik gründen im Gasthaus Zur Linde den Sportverein Musterstadt.' },
+  { jahr: '1952', text: 'Nach Jahren auf einer Kuhweide wird der Sportpark Am Mühlbach eingeweiht, gebaut zum großen Teil von den Mitgliedern selbst.' },
+  { jahr: '1978', text: 'Aufstieg in die Bezirksliga. Zum Entscheidungsspiel gegen Probstadt kommen 2.400 Menschen an den Mühlbach.' },
+  { jahr: '1996', text: 'Das neue Vereinsheim öffnet. 140 Mitglieder haben an 61 Wochenenden mitgebaut.' },
+  { jahr: '2009', text: 'Die erste Frauenmannschaft wird gegründet, mit elf Spielerinnen und geliehenen Trikots.' },
+  { jahr: '2021', text: 'Hundert Jahre SV Musterstadt: Festwoche, Jubiläumsspiel und ein neuer Kunstrasenplatz.' },
+  { jahr: '2026', text: 'Das Flutlicht am Rasenplatz wird auf LED umgerüstet, finanziert zur Hälfte aus Spenden und Sponsoring.' },
+];
+
+const vorstand = [
+  { name: 'Petra Neumann', rolle: '1. Vorsitzende' },
+  { name: 'Klaus Richter', rolle: '2. Vorsitzender' },
+  { name: 'Sabine Vogel', rolle: 'Kassenwartin' },
+  { name: 'Christian Bauer', rolle: 'Jugendleiter' },
+  { name: 'Katrin Engel', rolle: 'Leiterin Mädchen- und Frauenfußball' },
+  { name: 'Frank Lehmann', rolle: 'Spielbetrieb und Schiedsrichterwesen' },
+];
+
+const anlagen = [
+  { titel: 'Rasenplatz', text: 'Naturrasen mit LED-Flutlicht, Tribüne mit 180 Sitzplätzen. Hier spielen die Erste und die Frauen.' },
+  { titel: 'Kunstrasen', text: 'Ganzjährig bespielbar, teilbar in vier Kleinfelder. Trainingsplatz für alle Mannschaften und Austragungsort der Jugendspiele.' },
+  { titel: 'Vereinsheim', text: 'Gastraum mit 70 Plätzen, Terrasse zum Rasenplatz, sechs Umkleiden. Für Feiern von Mitgliedern auch zu mieten.' },
+];
+---
+
+<BaseLayout
+  title="Verein"
+  description="Seit 1921 spielt Musterstadt am Mühlbach Fußball. Geschichte, Vorstand, Sportpark und Anfahrt des SV Musterstadt."
+>
+  <PageIntro
+    eyebrow="Verein"
+    title="Seit 1921 <em>am Mühlbach</em>"
+    lead={`Gegründet von Fabrikarbeitern, gewachsen mit der Stadt. Heute hat der ${verein.name} ${verein.mitglieder} Mitglieder und ist einer der größten Vereine im Kreis. Die meisten davon kennen sich mit Vornamen.`}
+  />
+
+  <section class="section container geschichte" aria-labelledby="geschichte-titel">
+    <div class="geschichte__kopf">
+      <span class="eyebrow">Geschichte</span>
+      <h2 id="geschichte-titel" class="h2">Hundert Jahre und ein paar mehr</h2>
+      <div class="img-frame geschichte__bild reveal">
+        <Picture
+          src={schneeBild}
+          alt="Flutlichtstrahler leuchten durch dichten Schneefall in den Nachthimmel"
+          widths={[400, 640, 900]}
+          sizes="(min-width: 60rem) 34vw, 92vw"
+          formats={['avif', 'webp']}
+        />
+      </div>
+    </div>
+    <ol class="zeitstrahl">
+      {
+        geschichte.map((g) => (
+          <li class="reveal">
+            <span class="zeitstrahl__jahr zahlen">{g.jahr}</span>
+            <p>{g.text}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <section class="section nacht" aria-labelledby="vorstand-titel">
+    <div class="container">
+      <div class="kopf">
+        <div>
+          <span class="eyebrow">Ehrenamt</span>
+          <h2 id="vorstand-titel" class="h2">Der Vorstand</h2>
+        </div>
+        <p class="vorstand__hinweis">
+          Alle arbeiten ehrenamtlich. Erreichbar sind sie über <a href={`mailto:${verein.email}`}>{verein.email}</a> oder sonntags am Vereinsheim.
+        </p>
+      </div>
+      <ul class="vorstand">
+        {
+          vorstand.map((p) => (
+            <li>
+              <span class="vorstand__initialen" aria-hidden="true">
+                {p.name
+                  .split(' ')
+                  .map((n) => n[0])
+                  .join('')}
+              </span>
+              <span class="vorstand__name">{p.name}</span>
+              <span class="vorstand__rolle">{p.rolle}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section container sportpark" id="anfahrt" aria-labelledby="sportpark-titel">
+    <div class="kopf">
+      <div>
+        <span class="eyebrow">{verein.sportpark}</span>
+        <h2 id="sportpark-titel" class="h2">Anfahrt &amp; Anlage</h2>
+      </div>
+    </div>
+
+    <div class="sportpark__grid">
+      <figure class="plan">
+        <svg viewBox="0 0 640 420" role="img" aria-labelledby="plan-titel" focusable="false">
+          <title id="plan-titel">Lageplan des Sportparks: Rasenplatz im Norden, Kunstrasen im Süden, dazwischen das Vereinsheim, Eingang und Parkplatz an der Mühlbachstraße im Westen</title>
+          <rect width="640" height="420" fill="#e4ecdf"></rect>
+          <path d="M0 360 C120 330 200 400 330 380 S520 340 640 372 V420 H0Z" fill="#b9d3e6"></path>
+          <text x="560" y="404" font-size="13" fill="#3a6584" font-style="italic">Mühlbach</text>
+          <rect x="0" y="0" width="58" height="420" fill="#d5d1c8"></rect>
+          <text x="34" y="210" font-size="13" fill="#5c626c" transform="rotate(-90 34 210)" text-anchor="middle">Mühlbachweg</text>
+          <g>
+            <rect x="160" y="28" width="300" height="170" fill="#4f9a5e" rx="2"></rect>
+            <rect x="170" y="38" width="280" height="150" fill="none" stroke="#fff" stroke-width="2"></rect>
+            <line x1="310" y1="38" x2="310" y2="188" stroke="#fff" stroke-width="2"></line>
+            <circle cx="310" cy="113" r="24" fill="none" stroke="#fff" stroke-width="2"></circle>
+            <rect x="170" y="78" width="38" height="70" fill="none" stroke="#fff" stroke-width="2"></rect>
+            <rect x="412" y="78" width="38" height="70" fill="none" stroke="#fff" stroke-width="2"></rect>
+            <rect x="196" y="8" width="228" height="14" fill="#c8102e"></rect>
+            <text x="310" y="19" font-size="10" fill="#fff" text-anchor="middle" font-weight="700">TRIBÜNE</text>
+            <text x="310" y="218" font-size="15" fill="#14171c" text-anchor="middle" font-weight="700">Rasenplatz</text>
+          </g>
+          <g>
+            <rect x="160" y="250" width="240" height="110" fill="#2d7a43" rx="2"></rect>
+            <rect x="168" y="258" width="224" height="94" fill="none" stroke="#fff" stroke-width="2"></rect>
+            <line x1="280" y1="258" x2="280" y2="352" stroke="#fff" stroke-width="2"></line>
+            <circle cx="280" cy="305" r="16" fill="none" stroke="#fff" stroke-width="2"></circle>
+            <text x="280" y="244" font-size="15" fill="#14171c" text-anchor="middle" font-weight="700">Kunstrasen</text>
+          </g>
+          <g>
+            <rect x="470" y="226" width="120" height="84" fill="#14171c" rx="3"></rect>
+            <path d="M470 226 530 200 590 226Z" fill="#c8102e"></path>
+            <text x="530" y="273" font-size="14" fill="#fff" text-anchor="middle" font-weight="700">Vereinsheim</text>
+          </g>
+          <g>
+            <rect x="70" y="250" width="72" height="96" fill="#bdb7aa" rx="2"></rect>
+            <text x="106" y="294" font-size="22" fill="#14171c" text-anchor="middle" font-weight="700">P</text>
+            <text x="106" y="314" font-size="10" fill="#14171c" text-anchor="middle">80 Plätze</text>
+          </g>
+          <g>
+            <rect x="58" y="200" width="28" height="30" fill="#c8102e"></rect>
+            <path d="M64 215h14m-5-5 5 5-5 5" stroke="#fff" stroke-width="2" fill="none"></path>
+            <text x="92" y="220" font-size="12" fill="#14171c" font-weight="700">Eingang</text>
+          </g>
+          <g>
+            <circle cx="30" cy="120" r="13" fill="#f2b705"></circle>
+            <text x="30" y="125" font-size="13" fill="#14171c" text-anchor="middle" font-weight="700">H</text>
+            <text x="66" y="112" font-size="11" fill="#14171c">Bus 4</text>
+            <text x="66" y="126" font-size="11" fill="#14171c">Mühlbachweg</text>
+          </g>
+          <path d="M86 215 H150 V225 H160" stroke="#9a9488" stroke-width="3" stroke-dasharray="4 4" fill="none"></path>
+        </svg>
+        <figcaption>Lageplan, nicht maßstabsgetreu</figcaption>
+      </figure>
+
+      <div class="anfahrt">
+        <address>
+          <strong>{verein.sportpark}</strong><br />
+          {verein.strasse}<br />
+          {`${verein.plz} ${verein.ort}`}
+        </address>
+        <dl>
+          <div>
+            <dt>Bus</dt>
+            <dd>Linie 4 bis Haltestelle Mühlbachweg, von dort 2 Minuten zu Fuß</dd>
+          </div>
+          <div>
+            <dt>Auto</dt>
+            <dd>80 kostenlose Parkplätze direkt am Eingang, an Heimspieltagen oft voll</dd>
+          </div>
+          <div>
+            <dt>Fahrrad</dt>
+            <dd>Überdachte Stellplätze neben dem Vereinsheim, Anfahrt über den Radweg am Mühlbach</dd>
+          </div>
+        </dl>
+        <ul class="anlagen">
+          {
+            anlagen.map((a) => (
+              <li>
+                <h3 class="anlagen__titel">{a.titel}</h3>
+                <p>{a.text}</p>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section--tight container bilder" aria-label="Eindrücke vom Sportpark">
+    <div class="img-frame bilder__a reveal">
+      <Picture
+        src={platzBild}
+        alt="Der Rasenplatz in der Abenddämmerung, im Hintergrund Bäume und das Tor"
+        widths={[480, 800, 1200]}
+        sizes="(min-width: 60rem) 55vw, 92vw"
+        formats={['avif', 'webp']}
+      />
+    </div>
+    <div class="img-frame bilder__b reveal">
+      <Picture
+        src={zweikampfBild}
+        alt="Zwei Spieler in blauem und orangem Trikot sprinten nebeneinander dem Ball hinterher"
+        widths={[400, 700, 1000]}
+        sizes="(min-width: 60rem) 35vw, 92vw"
+        formats={['avif', 'webp']}
+      />
+    </div>
+  </section>
+
+  <MitmachenCta />
+</BaseLayout>
+
+<style>
+  .geschichte {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: clamp(2.5rem, 1rem + 5vw, 6rem);
+  }
+  .geschichte__kopf {
+    display: grid;
+    gap: 1.25rem;
+    align-content: start;
+  }
+  .geschichte__bild {
+    aspect-ratio: 4 / 5;
+    margin-top: 1.5rem;
+    max-width: 26rem;
+  }
+  .zeitstrahl {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-left: 3px solid var(--rot);
+  }
+  .zeitstrahl li {
+    position: relative;
+    display: grid;
+    gap: 0.4rem;
+    padding: 0 0 2.25rem 2rem;
+  }
+  .zeitstrahl li::before {
+    content: '';
+    position: absolute;
+    left: -0.6rem;
+    top: 0.5rem;
+    width: 0.9rem;
+    height: 0.9rem;
+    background: var(--kreide);
+    border: 3px solid var(--rot);
+    border-radius: 50%;
+  }
+  .zeitstrahl__jahr {
+    font-family: var(--font-display-stack);
+    font-weight: 800;
+    font-size: var(--step-3);
+    line-height: 1;
+  }
+  .zeitstrahl p {
+    color: var(--ink-2);
+    max-width: 34em;
+  }
+
+  .vorstand__hinweis {
+    max-width: 30em;
+    color: var(--on-nacht-2);
+  }
+  .vorstand {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+  .vorstand li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+    column-gap: 1rem;
+    align-items: center;
+    padding: 1.25rem;
+    background: var(--nacht-2);
+    border-left: 4px solid var(--rot);
+  }
+  .vorstand__initialen {
+    grid-row: span 2;
+    display: grid;
+    place-items: center;
+    width: 3.25rem;
+    height: 3.25rem;
+    border-radius: 50%;
+    background: var(--rot);
+    color: #fff;
+    font-family: var(--font-display-stack);
+    font-weight: 800;
+    font-size: 1.3rem;
+  }
+  .vorstand__name {
+    font-weight: 600;
+    align-self: end;
+  }
+  .vorstand__rolle {
+    font-size: 0.9rem;
+    color: var(--on-nacht-2);
+    align-self: start;
+  }
+
+  .sportpark__grid {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: clamp(2rem, 1rem + 3vw, 4rem);
+    align-items: start;
+  }
+  .plan {
+    margin: 0;
+    display: grid;
+    gap: 0.6rem;
+  }
+  .plan svg {
+    width: 100%;
+    border-radius: var(--radius);
+    font-family: var(--font-body-stack);
+  }
+  .plan figcaption {
+    font-size: 0.85rem;
+    color: var(--ink-3);
+  }
+  .anfahrt {
+    display: grid;
+    gap: 1.75rem;
+  }
+  address {
+    font-style: normal;
+    font-size: var(--step-1);
+    line-height: 1.4;
+  }
+  .anfahrt dl {
+    margin: 0;
+    display: grid;
+    gap: 0.9rem;
+  }
+  .anfahrt dl div {
+    display: grid;
+    grid-template-columns: 5rem 1fr;
+    gap: 1rem;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .anfahrt dt {
+    font-family: var(--font-display-stack);
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 1.1rem;
+  }
+  .anfahrt dd {
+    margin: 0;
+    color: var(--ink-2);
+  }
+  .anlagen {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1.1rem;
+  }
+  .anlagen li {
+    display: grid;
+    gap: 0.3rem;
+  }
+  .anlagen__titel {
+    font-size: 1.35rem;
+  }
+  .anlagen p {
+    color: var(--ink-2);
+  }
+
+  .bilder {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 1rem;
+  }
+  .bilder > div {
+    aspect-ratio: 4 / 3;
+  }
+  .bilder__a {
+    aspect-ratio: 16 / 10 !important;
+  }
+  .bilder__b {
+    align-self: end;
+  }
+
+  @media (max-width: 64rem) {
+    .vorstand {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .sportpark__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 60rem) {
+    .geschichte {
+      grid-template-columns: 1fr;
+    }
+    .geschichte__bild {
+      aspect-ratio: 16 / 10;
+      max-width: none;
+    }
+    .bilder {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 40rem) {
+    .vorstand {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,23 @@
+---
+// Vereinswappen: rotes Schild, weißes Band mit Gründungsjahr. Ohne IDs, damit es mehrfach pro Seite stehen darf.
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+---
+
+<svg class:list={['wappen', className]} viewBox="0 0 100 120" aria-hidden="true" focusable="false">
+  <path d="M50 2 96 14v44c0 30-22 50-46 60C26 108 4 88 4 58V14Z" fill="#c8102e"></path>
+  <path d="M50 9.5 89.5 19.8v38c0 26-19 43.5-39.5 52.4C29.5 101.3 10.5 83.8 10.5 57.8v-38Z" fill="none" stroke="#fff" stroke-width="2.5"></path>
+  <path d="M10.5 63h79v-.1c0 6-1 11.6-2.7 16.6H13.2c-1.7-5-2.7-10.6-2.7-16.5Z" fill="#fff"></path>
+  <text x="50" y="54" text-anchor="middle" fill="#fff" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-weight="800" font-size="34" letter-spacing="1">SV</text>
+  <text x="50" y="76.5" text-anchor="middle" fill="#c8102e" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-weight="800" font-size="14" letter-spacing="2">1921</text>
+  <path d="M38 89h24l-12 9Z" fill="#fff"></path>
+</svg>
+
+<style>
+  .wappen {
+    width: auto;
+    height: 100%;
+  }
+</style>

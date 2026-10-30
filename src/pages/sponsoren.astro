@@ -1,0 +1,200 @@
+---
+import { Picture } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageIntro from '../components/PageIntro.astro';
+import Wortmarke from '../components/Wortmarke.astro';
+import Arrow from '../components/Arrow.astro';
+import { hauptsponsor, premium, partner } from '../data/sponsoren';
+import { verein } from '../data/verein';
+
+import trikotBild from '../assets/images/schuss.jpg';
+
+const pakete = [
+  { titel: 'Bandenwerbung', text: 'Eine Bande am Rasenplatz, gesehen von rund 300 Menschen an jedem Heimspieltag.', preis: 'ab 450 € pro Saison' },
+  { titel: 'Jugendpate', text: 'Trikotsatz, Bälle oder Trainingslager für eine Jugendmannschaft, mit Logo auf den Aufwärmshirts.', preis: 'ab 800 € pro Saison' },
+  { titel: 'Spieltagspartner', text: 'Ein Heimspiel, das Ihren Namen trägt: Anstoß, Stadionheft, Durchsagen und Gewinnspiel.', preis: '350 € pro Spiel' },
+];
+---
+
+<BaseLayout
+  title="Sponsoren"
+  description="Ohne die Unternehmen aus Musterstadt gäbe es keinen Spielbetrieb. Sponsoren und Partner des SV Musterstadt und Möglichkeiten, uns zu unterstützen."
+>
+  <PageIntro
+    eyebrow="Sponsoren"
+    title="Musterstadt <em>hält zusammen</em>"
+    lead="Trikots, Bälle, Flutlicht und Fahrten zu Auswärtsspielen: Vieles davon bezahlen Unternehmen aus der Stadt. Danke an alle, die den SV Musterstadt unterstützen."
+  />
+
+  <section class="section container haupt" aria-labelledby="haupt-titel">
+    <div class="img-frame haupt__bild">
+      <Picture
+        src={trikotBild}
+        alt="Spieler in orangem Trikot holt an der Seitenlinie zum Schuss aus"
+        widths={[480, 800, 1200]}
+        sizes="(min-width: 60rem) 45vw, 92vw"
+        formats={['avif', 'webp']}
+        loading="eager"
+        fetchpriority="high"
+      />
+    </div>
+    <div class="haupt__text">
+      <span class="eyebrow">Hauptsponsor &amp; Trikotpartner</span>
+      <h2 id="haupt-titel" class="h2">{hauptsponsor.name}</h2>
+      <p class="lead">{hauptsponsor.text}</p>
+      <a href={hauptsponsor.url} class="link-pfeil">Zur Website der Tischlerei <Arrow /></a>
+    </div>
+  </section>
+
+  <section class="section--tight container" aria-labelledby="premium-titel">
+    <h2 id="premium-titel" class="h3 gruppe__titel">Premium-Partner</h2>
+    <ul class="logos logos--gross">
+      {
+        premium.map((s) => (
+          <li>
+            <Wortmarke sponsor={s} />
+            <span class="logos__branche">{s.branche}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="section--tight container" aria-labelledby="partner-titel">
+    <h2 id="partner-titel" class="h3 gruppe__titel">Partner</h2>
+    <ul class="logos">
+      {
+        partner.map((s) => (
+          <li>
+            <Wortmarke sponsor={s} />
+            <span class="logos__branche">{s.branche}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="section nacht streifen werden" aria-labelledby="werden-titel">
+    <div class="container">
+      <div class="kopf">
+        <div>
+          <span class="eyebrow">Sponsor werden</span>
+          <h2 id="werden-titel" class="h2">Ihr Name am Mühlbach</h2>
+        </div>
+        <p class="werden__text">
+          Jeder Euro bleibt im Verein und kommt zu einem großen Teil der Jugendarbeit zugute. Spenden und Sponsoring sind steuerlich absetzbar.
+        </p>
+      </div>
+      <ul class="pakete">
+        {
+          pakete.map((p) => (
+            <li>
+              <h3 class="h3">{p.titel}</h3>
+              <p>{p.text}</p>
+              <p class="pakete__preis">{p.preis}</p>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="werden__kontakt">
+        <a href={`mailto:${verein.email}?subject=Sponsoring`} class="btn btn--rot">Sponsoring anfragen <Arrow /></a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .haupt {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: clamp(2rem, 1rem + 4vw, 5rem);
+    align-items: center;
+  }
+  .haupt__bild {
+    aspect-ratio: 4 / 3;
+  }
+  .haupt__text {
+    display: grid;
+    gap: 1.25rem;
+    justify-items: start;
+  }
+  .gruppe__titel {
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 3px solid var(--ink);
+  }
+  .logos {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+  }
+  .logos li {
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    gap: 0.5rem;
+    min-height: 8rem;
+    padding: 1.25rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    text-align: center;
+  }
+  .logos--gross li {
+    min-height: 10rem;
+    background: var(--kreide-2);
+  }
+  .logos__branche {
+    font-size: 0.8rem;
+    color: var(--ink-3);
+  }
+  .werden__text {
+    max-width: 30em;
+    color: var(--on-nacht-2);
+  }
+  .pakete {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+  .pakete li {
+    display: grid;
+    gap: 0.9rem;
+    align-content: start;
+    padding: 1.75rem;
+    background: var(--nacht-2);
+    border-top: 4px solid var(--rot);
+  }
+  .pakete li p {
+    color: var(--on-nacht-2);
+  }
+  .pakete .pakete__preis {
+    margin-top: auto;
+    font-family: var(--font-display-stack);
+    font-weight: 800;
+    font-size: 1.35rem;
+    text-transform: uppercase;
+    color: var(--on-nacht);
+  }
+  .werden__kontakt {
+    margin-top: 2.5rem;
+  }
+  @media (max-width: 64rem) {
+    .logos {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .pakete {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 60rem) {
+    .haupt {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

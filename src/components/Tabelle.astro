@@ -1,0 +1,153 @@
+---
+import { tabelle, eigenerVerein, liga, saison } from '../data/saison';
+
+interface Props {
+  /** Nur die Plätze 1 bis n zeigen */
+  bis?: number;
+}
+const { bis } = Astro.props;
+const zeilen = bis ? tabelle.slice(0, bis) : tabelle;
+const vorzeichen = (n: number) => (n > 0 ? `+${n}` : n < 0 ? `−${Math.abs(n)}` : '0');
+const zone = (platz: number) => (platz === 1 ? 'aufstieg' : platz === 2 ? 'relegation' : platz >= tabelle.length - 1 ? 'abstieg' : undefined);
+---
+
+<div class="tabelle">
+  <div class="table-scroll">
+    <table>
+      <caption class="visually-hidden">Tabelle {liga}, Saison {saison}</caption>
+      <thead>
+        <tr>
+          <th scope="col"><abbr title="Platz">Pl.</abbr></th>
+          <th scope="col" class="links">Verein</th>
+          <th scope="col"><abbr title="Spiele">Sp.</abbr></th>
+          <th scope="col" class="breit"><abbr title="Siege">S</abbr></th>
+          <th scope="col" class="breit"><abbr title="Unentschieden">U</abbr></th>
+          <th scope="col" class="breit"><abbr title="Niederlagen">N</abbr></th>
+          <th scope="col" class="breit">Tore</th>
+          <th scope="col"><abbr title="Tordifferenz">Diff.</abbr></th>
+          <th scope="col"><abbr title="Punkte">Pkt.</abbr></th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          zeilen.map((z) => (
+            <tr class:list={[zone(z.platz), { eigen: z.verein === eigenerVerein }]}>
+              <td class="platz">{z.platz}</td>
+              <th scope="row" class="links">
+                {z.verein}
+              </th>
+              <td>{z.spiele}</td>
+              <td class="breit">{z.s}</td>
+              <td class="breit">{z.u}</td>
+              <td class="breit">{z.n}</td>
+              <td class="breit">{`${z.tore}:${z.gegentore}`}</td>
+              <td>{vorzeichen(z.differenz)}</td>
+              <td class="punkte">{z.punkte}</td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+  {
+    !bis && (
+      <ul class="legende">
+        <li class="aufstieg">Aufstieg</li>
+        <li class="relegation">Relegation</li>
+        <li class="abstieg">Abstieg</li>
+      </ul>
+    )
+  }
+</div>
+
+<style>
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+  }
+  th,
+  td {
+    padding: 0.7rem 0.5rem;
+    text-align: right;
+    border-bottom: 1px solid var(--line);
+    white-space: nowrap;
+  }
+  thead th {
+    font-family: var(--font-display-stack);
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    border-bottom-width: 2px;
+  }
+  abbr {
+    text-decoration: none;
+  }
+  .links {
+    text-align: left;
+    width: 100%;
+  }
+  tbody th {
+    font-weight: 400;
+  }
+  .platz {
+    text-align: center;
+    font-weight: 600;
+    border-left: 4px solid transparent;
+  }
+  .aufstieg .platz {
+    border-left-color: var(--rasen);
+  }
+  .relegation .platz {
+    border-left-color: #8fbf9b;
+  }
+  .abstieg .platz {
+    border-left-color: var(--rot);
+  }
+  .punkte {
+    font-weight: 600;
+  }
+  .eigen {
+    background: color-mix(in srgb, var(--rot) 10%, transparent);
+  }
+  .eigen th,
+  .eigen td {
+    font-weight: 700;
+  }
+  .legende {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    list-style: none;
+    margin: 1rem 0 0;
+    padding: 0;
+    font-size: 0.85rem;
+    color: var(--ink-3);
+  }
+  .legende li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .legende li::before {
+    content: '';
+    width: 0.8rem;
+    height: 0.8rem;
+  }
+  .legende .aufstieg::before {
+    background: var(--rasen);
+  }
+  .legende .relegation::before {
+    background: #8fbf9b;
+  }
+  .legende .abstieg::before {
+    background: var(--rot);
+  }
+  @media (max-width: 40rem) {
+    .breit {
+      display: none;
+    }
+  }
+</style>

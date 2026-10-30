@@ -1,0 +1,53 @@
+---
+// Formkurve: die letzten Ergebnisse als S/U/N-Kästchen
+import type { Ausgang } from '../data/saison';
+
+interface Props {
+  form: Ausgang[];
+}
+const { form } = Astro.props;
+const lang = { S: 'Sieg', U: 'Unentschieden', N: 'Niederlage' };
+---
+
+<ol class="form" aria-label={`Die letzten ${form.length} Spiele, ältestes zuerst`}>
+  {
+    form.map((a) => (
+      <li class:list={['form__spiel', `form__spiel--${a}`]}>
+        <abbr title={lang[a]}>{a}</abbr>
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .form {
+    display: flex;
+    gap: 0.35rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .form__spiel {
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: var(--radius);
+    font-family: var(--font-display-stack);
+    font-weight: 800;
+    font-size: 1.05rem;
+    color: #fff;
+  }
+  abbr {
+    text-decoration: none;
+  }
+  .form__spiel--S {
+    background: var(--rasen);
+  }
+  .form__spiel--U {
+    background: #6b7280;
+  }
+  .form__spiel--N {
+    background: var(--rot-2);
+  }
+</style>

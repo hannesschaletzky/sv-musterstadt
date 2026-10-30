@@ -1,0 +1,526 @@
+---
+import { Picture } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageIntro from '../components/PageIntro.astro';
+import Arrow from '../components/Arrow.astro';
+import { euro } from '../data/verein';
+
+import spielenBild from '../assets/images/kinder-hand.jpg';
+import helfenBild from '../assets/images/torwart.jpg';
+import foerdernBild from '../assets/images/ball-fuss.jpg';
+
+const teams = (await getCollection('mannschaften')).sort((a, b) => a.data.order - b.data.order);
+
+const wege = [
+  {
+    titel: 'Spielen',
+    text: 'Probetraining ist in jeder Mannschaft kostenlos. Vier Wochen lang ohne Mitgliedschaft, danach entscheidest du.',
+    bild: spielenBild,
+    alt: 'Kinder in Trikots halten sich vor dem Anpfiff an den Händen',
+  },
+  {
+    titel: 'Helfen',
+    text: 'Grill, Kasse, Kreidewagen oder Trainerlizenz: 38 Ehrenamtliche halten den Verein am Laufen. Jede Stunde hilft.',
+    bild: helfenBild,
+    alt: 'Ein Torwart streckt sich nach einem hoch geschossenen Ball',
+  },
+  {
+    titel: 'Fördern',
+    text: 'Auch ohne Fußballschuhe kannst du dabei sein. Fördermitglieder sichern den Spielbetrieb und haben bei Heimspielen freien Eintritt.',
+    bild: foerdernBild,
+    alt: 'Ein Fußballschuh steht auf einem Ball im Gras',
+  },
+];
+
+const beitraege = [
+  { gruppe: 'Kinder und Jugendliche bis 17 Jahre', monat: 8 },
+  { gruppe: 'Erwachsene, aktiv', monat: 14 },
+  { gruppe: 'Studierende, Auszubildende, Freiwilligendienst', monat: 9 },
+  { gruppe: 'Familien (alle im Haushalt)', monat: 25 },
+  { gruppe: 'Fördermitglieder', monat: 6 },
+];
+
+const fragen = [
+  {
+    frage: 'Was brauche ich zum Probetraining?',
+    antwort: 'Sportkleidung, Schienbeinschoner, eine Trinkflasche und Fußballschuhe. Für den Kunstrasen am besten Multinocken, für den Rasen Nocken. Fürs erste Mal reichen auch Hallen- oder Laufschuhe.',
+  },
+  {
+    frage: 'Muss ich mich vorher anmelden?',
+    antwort: 'Nein. Komm einfach zur Trainingszeit an den Platz und sprich das Trainerteam an. Wenn du vorher Bescheid gibst, freut sich die Mannschaft aber schon auf dich.',
+  },
+  {
+    frage: 'Ab welchem Alter kann mein Kind mitspielen?',
+    antwort: 'Ab vier Jahren bei den Bambini. Nach oben gibt es keine Grenze, unsere Alten Herren spielen teilweise mit Mitte sechzig noch mit.',
+  },
+  {
+    frage: 'Wie kündige ich meine Mitgliedschaft?',
+    antwort: 'Mit einer formlosen E-Mail an die Geschäftsstelle, jeweils zum Ende eines Quartals. Ein Grund ist nicht nötig.',
+  },
+  {
+    frage: 'Gibt es Unterstützung, wenn der Beitrag schwierig ist?',
+    antwort: 'Ja. Über das Bildungs- und Teilhabepaket übernimmt die Stadt Beiträge für Kinder und Jugendliche. Und wenn das nicht greift, findet der Vorstand eine Lösung. Bei uns muss niemand wegen Geld aufhören.',
+  },
+];
+---
+
+<BaseLayout
+  title="Mitmachen"
+  description="Probetraining, Mitgliedschaft, Beiträge und Ehrenamt beim SV Musterstadt 1921. Probetraining ist in jeder Mannschaft kostenlos."
+>
+  <PageIntro
+    eyebrow="Mitmachen"
+    title="Komm vorbei. <em>Bleib da.</em>"
+    lead="Ob du spielen, helfen oder einfach dazugehören willst: Beim SV Musterstadt ist für alle Platz. Fang mit einem Probetraining an, den Rest klären wir am Platz."
+  >
+    <div class="intro-aktionen">
+      <a href="#antrag" class="btn btn--rot">Probetraining anfragen <Arrow /></a>
+      <a href="#beitraege" class="btn btn--rand">Beiträge</a>
+    </div>
+  </PageIntro>
+
+  <section class="section container" aria-label="Drei Wege in den Verein">
+    <ul class="wege">
+      {
+        wege.map((w, i) => (
+          <li class="weg reveal">
+            <div class="img-frame weg__bild">
+              <Picture
+                src={w.bild}
+                alt={w.alt}
+                widths={[360, 480, 640, 800]}
+                sizes="(min-width: 60rem) 30vw, 92vw"
+                formats={['avif', 'webp']}
+                loading={i === 0 ? 'eager' : 'lazy'}
+              />
+            </div>
+            <span class="weg__nr zahlen" aria-hidden="true">
+              0{i + 1}
+            </span>
+            <h2 class="h3">{w.titel}</h2>
+            <p>{w.text}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="section getoent" id="beitraege" aria-labelledby="beitraege-titel">
+    <div class="container beitraege">
+      <div class="beitraege__kopf">
+        <span class="eyebrow">Mitgliedschaft</span>
+        <h2 id="beitraege-titel" class="h2">Beiträge</h2>
+        <p class="lead">Keine Aufnahmegebühr, keine Arbeitsstunden-Pflicht, keine versteckten Kosten. Der Beitrag wird vierteljährlich abgebucht.</p>
+      </div>
+      <div class="table-scroll">
+        <table class="beitragstabelle">
+          <caption class="visually-hidden">Mitgliedsbeiträge pro Monat</caption>
+          <thead>
+            <tr>
+              <th scope="col">Mitgliedschaft</th>
+              <th scope="col">pro Monat</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              beitraege.map((b) => (
+                <tr>
+                  <th scope="row">{b.gruppe}</th>
+                  <td>{euro(b.monat)}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="section container formteil" aria-labelledby="antrag-titel">
+    <div class="formteil__text">
+      <span class="eyebrow">Probetraining &amp; Aufnahme</span>
+      <h2 id="antrag-titel" class="h2">Schreib uns</h2>
+      <p class="lead">Sag uns, wofür du dich interessierst. Das passende Trainerteam meldet sich innerhalb von zwei Tagen.</p>
+      <div class="faq">
+        <h3 class="faq__titel">Häufige Fragen</h3>
+        {
+          fragen.map((f) => (
+            <details>
+              <summary>{f.frage}</summary>
+              <p>{f.antwort}</p>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+
+    <form class="formular" id="antrag" method="post" novalidate>
+      <fieldset class="feld">
+        <legend>Ich möchte</legend>
+        <div class="chips">
+          {
+            ['Probetraining machen', 'Mitglied werden', 'Ehrenamtlich helfen'].map((a, i) => (
+              <label class="chip">
+                <input type="radio" name="anliegen" value={a} checked={i === 0} />
+                <span>{a}</span>
+              </label>
+            ))
+          }
+        </div>
+      </fieldset>
+      <div class="feld">
+        <label for="name">Name <span aria-hidden="true">*</span></label>
+        <input id="name" name="name" type="text" autocomplete="name" required />
+      </div>
+      <div class="feld feld--halb">
+        <label for="email">E-Mail <span aria-hidden="true">*</span></label>
+        <input id="email" name="email" type="email" autocomplete="email" required />
+      </div>
+      <div class="feld feld--halb">
+        <label for="telefon">Telefon <span class="optional">(optional)</span></label>
+        <input id="telefon" name="telefon" type="tel" autocomplete="tel" />
+      </div>
+      <div class="feld">
+        <label for="team">Mannschaft</label>
+        <select id="team" name="team">
+          <option value="">Weiß ich noch nicht</option>
+          {teams.map((t) => <option value={t.id}>{`${t.data.title} (${t.data.altersklasse})`}</option>)}
+        </select>
+      </div>
+      <div class="feld">
+        <label for="nachricht">Nachricht <span class="optional">(optional)</span></label>
+        <textarea id="nachricht" name="nachricht" rows="4" placeholder="Alter, bisherige Vereine, Fragen: alles hilft."></textarea>
+      </div>
+      <div class="feld">
+        <label class="check">
+          <input type="checkbox" name="datenschutz" required />
+          <span
+            >Ich bin einverstanden, dass meine Angaben zur Bearbeitung gespeichert werden. Mehr dazu in der <a href="/datenschutz/"
+              >Datenschutzerklärung</a
+            >. <span aria-hidden="true">*</span></span
+          >
+        </label>
+      </div>
+      <div class="feld absenden">
+        <button type="submit" class="btn btn--rot">Absenden <Arrow /></button>
+        <p class="hinweis">Beispielseite: Das Formular verschickt keine Daten.</p>
+      </div>
+      <p class="meldung" role="status" aria-live="polite" hidden></p>
+    </form>
+  </section>
+
+  <script>
+    const form = document.querySelector<HTMLFormElement>('#antrag');
+    const meldung = form?.querySelector<HTMLParagraphElement>('.meldung');
+
+    // Aus einer Mannschaftsseite kommend: Team vorauswählen
+    const team = new URLSearchParams(location.search).get('team');
+    const auswahl = form?.querySelector<HTMLSelectElement>('#team');
+    if (team && auswahl && [...auswahl.options].some((o) => o.value === team)) {
+      auswahl.value = team;
+    }
+
+    form?.addEventListener('submit', (event) => {
+      event.preventDefault();
+      if (!meldung) return;
+      form.classList.add('geprueft');
+      if (!form.checkValidity()) {
+        meldung.hidden = false;
+        meldung.dataset.art = 'fehler';
+        meldung.textContent = 'Bitte fülle alle Pflichtfelder aus.';
+        form.querySelector<HTMLElement>(':invalid')?.focus();
+        return;
+      }
+      meldung.hidden = false;
+      meldung.dataset.art = 'ok';
+      meldung.textContent =
+        'Danke! Auf einer echten Vereinsseite wäre deine Nachricht jetzt beim Trainerteam. Dies ist ein Beispielprojekt, es wurden keine Daten übertragen.';
+      form.reset();
+      form.classList.remove('geprueft');
+    });
+  </script>
+</BaseLayout>
+
+<style>
+  .intro-aktionen {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .wege {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+  .weg {
+    display: grid;
+    gap: 0.9rem;
+    align-content: start;
+  }
+  .weg__bild {
+    aspect-ratio: 4 / 3;
+    margin-bottom: 0.5rem;
+  }
+  .weg__nr {
+    font-family: var(--font-display-stack);
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: var(--rot);
+  }
+  .weg p {
+    color: var(--ink-2);
+  }
+
+  .beitraege {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: clamp(2rem, 1rem + 4vw, 5rem);
+    align-items: start;
+  }
+  .beitraege__kopf {
+    display: grid;
+    gap: 1.25rem;
+  }
+  .beitragstabelle {
+    width: 100%;
+    border-collapse: collapse;
+    border-top: 3px solid var(--ink);
+  }
+  .beitragstabelle th,
+  .beitragstabelle td {
+    padding: 1.1rem 0;
+    text-align: left;
+    border-bottom: 1px solid var(--line);
+  }
+  .beitragstabelle thead th {
+    font-family: var(--font-display-stack);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-size: 0.95rem;
+    color: var(--ink-3);
+  }
+  .beitragstabelle tbody th {
+    font-weight: 400;
+    padding-right: 1rem;
+  }
+  .beitragstabelle td,
+  .beitragstabelle thead th:last-child {
+    text-align: right;
+  }
+  .beitragstabelle td {
+    font-family: var(--font-display-stack);
+    font-weight: 800;
+    font-size: 1.6rem;
+    white-space: nowrap;
+  }
+
+  .formteil {
+    display: grid;
+    grid-template-columns: 1fr 1.15fr;
+    gap: clamp(2.5rem, 1rem + 5vw, 6rem);
+    align-items: start;
+  }
+  .formteil__text {
+    display: grid;
+    gap: 1.25rem;
+  }
+  .faq {
+    margin-top: 1.5rem;
+    border-top: 3px solid var(--ink);
+  }
+  .faq__titel {
+    font-size: 1.35rem;
+    padding-block: 1rem;
+  }
+  details {
+    border-top: 1px solid var(--line);
+  }
+  summary {
+    position: relative;
+    padding: 1rem 2rem 1rem 0;
+    font-weight: 600;
+    cursor: pointer;
+    list-style: none;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  summary::after {
+    content: '+';
+    position: absolute;
+    right: 0.25rem;
+    top: 0.75rem;
+    font-family: var(--font-display-stack);
+    font-weight: 800;
+    font-size: 1.5rem;
+    color: var(--rot);
+    transition: transform 0.2s var(--ease);
+  }
+  details[open] summary::after {
+    transform: rotate(45deg);
+  }
+  details p {
+    padding-bottom: 1.25rem;
+    color: var(--ink-2);
+  }
+
+  .formular {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem 1.25rem;
+    padding: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+    background: #fff;
+    border-top: 5px solid var(--rot);
+    border-radius: var(--radius);
+    box-shadow: 0 1.5rem 3rem -2rem rgb(20 23 28 / 0.35);
+  }
+  .feld {
+    grid-column: 1 / -1;
+    display: grid;
+    gap: 0.5rem;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    min-width: 0;
+  }
+  .feld--halb {
+    grid-column: span 1;
+  }
+  label,
+  legend {
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+  legend {
+    margin-bottom: 0.75rem;
+    padding: 0;
+  }
+  .optional {
+    font-weight: 400;
+    color: var(--ink-3);
+  }
+  input[type='text'],
+  input[type='email'],
+  input[type='tel'],
+  select,
+  textarea {
+    width: 100%;
+    font: inherit;
+    color: inherit;
+    padding: 0.8rem 0.9rem;
+    background: var(--kreide);
+    border: 1px solid #b9b2a5;
+    border-radius: var(--radius);
+    transition:
+      border-color 0.2s var(--ease),
+      box-shadow 0.2s var(--ease);
+  }
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: none;
+    border-color: var(--rot);
+    box-shadow: 0 0 0 3px rgb(200 16 46 / 0.18);
+  }
+  textarea {
+    resize: vertical;
+    min-height: 7rem;
+  }
+  .geprueft :invalid {
+    border-color: var(--rot-2);
+  }
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .chip {
+    position: relative;
+    font-weight: 400;
+  }
+  .chip input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+  .chip span {
+    display: inline-block;
+    padding: 0.5rem 0.95rem;
+    border: 2px solid var(--line);
+    border-radius: var(--radius);
+    font-size: 0.95rem;
+  }
+  .chip:hover span {
+    border-color: var(--ink);
+  }
+  .chip input:checked + span {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: #fff;
+  }
+  .chip input:focus-visible + span {
+    outline: 3px solid var(--rot);
+    outline-offset: 3px;
+  }
+  .check {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.75rem;
+    font-weight: 400;
+    color: var(--ink-2);
+    align-items: start;
+  }
+  .check input {
+    width: 1.15rem;
+    height: 1.15rem;
+    margin-top: 0.2rem;
+    accent-color: var(--rot);
+  }
+  .check a {
+    color: var(--rot-2);
+  }
+  .absenden {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.5rem;
+  }
+  .hinweis {
+    font-size: 0.85rem;
+    color: var(--ink-3);
+  }
+  .meldung {
+    grid-column: 1 / -1;
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius);
+    background: #e3f1e6;
+    color: #1d4d2b;
+  }
+  .meldung[data-art='fehler'] {
+    background: #fbe3e6;
+    color: #8a0c20;
+  }
+
+  @media (max-width: 64rem) {
+    .wege {
+      grid-template-columns: 1fr;
+      max-width: 36rem;
+    }
+    .beitraege,
+    .formteil {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 34rem) {
+    .feld--halb {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

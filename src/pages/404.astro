@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Arrow from '../components/Arrow.astro';
+---
+
+<BaseLayout title="Seite nicht gefunden" description="Diese Seite gibt es leider nicht.">
+  <section class="nf nacht streifen">
+    <div class="container nf__inner">
+      <span class="eyebrow">Fehler 404</span>
+      <h1 class="display">Abseits.</h1>
+      <p class="lead">Die Seite, die du suchst, gibt es nicht oder nicht mehr. Der Schiedsrichter zeigt in diese Richtungen:</p>
+      <div class="aktionen">
+        <a href="/" class="btn btn--rot">Zur Startseite <Arrow /></a>
+        <a href="/spielplan/" class="btn btn--rand">Spielplan</a>
+        <a href="/mannschaften/" class="btn btn--rand">Mannschaften</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .nf__inner {
+    display: grid;
+    gap: 1.75rem;
+    justify-items: start;
+    padding-block: clamp(5rem, 3rem + 8vw, 10rem);
+  }
+  .aktionen {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+</style>

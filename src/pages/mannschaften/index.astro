@@ -1,0 +1,113 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageIntro from '../../components/PageIntro.astro';
+import TeamCard from '../../components/TeamCard.astro';
+import MitmachenCta from '../../components/MitmachenCta.astro';
+
+const teams = (await getCollection('mannschaften')).sort((a, b) => a.data.order - b.data.order);
+const filter = [
+  { id: 'alle', label: 'Alle' },
+  { id: 'Herren', label: 'Herren' },
+  { id: 'Frauen', label: 'Frauen' },
+  { id: 'Jugend', label: 'Jugend' },
+];
+---
+
+<BaseLayout
+  title="Mannschaften"
+  description="Neun Mannschaften von den Bambini bis zu den Alten Herren: Trainingszeiten, Ligen und Ansprechpersonen aller Teams des SV Musterstadt."
+>
+  <PageIntro
+    eyebrow="Mannschaften"
+    title="Neun Teams, <em>ein Verein</em>"
+    lead="Von den Bambini, die gerade lernen, wohin der Ball rollt, bis zu den Alten Herren, die es noch genau wissen. Probetraining ist überall möglich, einfach zur Trainingszeit vorbeikommen."
+  />
+
+  <section class="section container teams" aria-label="Alle Mannschaften">
+    <fieldset class="filter">
+      <legend class="visually-hidden">Nach Bereich filtern</legend>
+      {
+        filter.map((f, i) => (
+          <label>
+            <input type="radio" name="bereich" value={f.id} checked={i === 0} />
+            <span>{f.label}</span>
+          </label>
+        ))
+      }
+    </fieldset>
+
+    <div class="raster">
+      {teams.map((t, i) => <TeamCard team={t} ebene="h2" eager={i === 0} />)}
+    </div>
+  </section>
+
+  <MitmachenCta />
+</BaseLayout>
+
+<style>
+  .filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    border: 0;
+    margin: 0 0 2.5rem;
+    padding: 0;
+  }
+  .filter label {
+    position: relative;
+    cursor: pointer;
+  }
+  .filter input {
+    position: absolute;
+    opacity: 0;
+    inset: 0;
+    cursor: pointer;
+  }
+  .filter span {
+    display: inline-block;
+    padding: 0.55rem 1.2rem 0.45rem;
+    border: 2px solid var(--ink);
+    border-radius: var(--radius);
+    font-family: var(--font-display-stack);
+    font-weight: 600;
+    font-size: 1.1rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition:
+      background-color 0.2s var(--ease),
+      color 0.2s var(--ease);
+  }
+  .filter label:hover span {
+    background: var(--kreide-2);
+  }
+  .filter input:checked + span {
+    background: var(--rot);
+    border-color: var(--rot);
+    color: #fff;
+  }
+  .filter input:focus-visible + span {
+    outline: 3px solid var(--rot);
+    outline-offset: 3px;
+  }
+  .raster {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+  .teams:has(input[value='Herren']:checked) :global([data-bereich]:not([data-bereich='Herren'])),
+  .teams:has(input[value='Frauen']:checked) :global([data-bereich]:not([data-bereich='Frauen'])),
+  .teams:has(input[value='Jugend']:checked) :global([data-bereich]:not([data-bereich='Jugend'])) {
+    display: none;
+  }
+  @media (max-width: 64rem) {
+    .raster {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 40rem) {
+    .raster {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

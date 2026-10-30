@@ -1,0 +1,183 @@
+---
+import { Picture } from 'astro:assets';
+import { getCollection, render } from 'astro:content';
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import NewsCard from '../../components/NewsCard.astro';
+import MitmachenCta from '../../components/MitmachenCta.astro';
+import { datum, verein } from '../../data/verein';
+
+export const getStaticPaths = (async () => {
+  const beitraege = await getCollection('aktuelles');
+  return beitraege.map((beitrag) => ({ params: { slug: beitrag.id }, props: { beitrag } }));
+}) satisfies GetStaticPaths;
+
+const { beitrag } = Astro.props;
+const { data } = beitrag;
+const { Content } = await render(beitrag);
+
+const weitere = (await getCollection('aktuelles'))
+  .filter((b) => b.id !== beitrag.id)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'NewsArticle',
+  headline: data.title,
+  description: data.description,
+  datePublished: data.date.toISOString(),
+  author: { '@type': 'Person', name: data.autor },
+  publisher: { '@id': `${Astro.site}#verein` },
+  mainEntityOfPage: new URL(Astro.url.pathname, Astro.site).toString(),
+};
+---
+
+<BaseLayout
+  title={data.title}
+  description={data.description}
+  image={data.image}
+  type="article"
+  jsonLd={jsonLd}
+  krumen={[{ name: 'Aktuelles', href: '/aktuelles/' }]}
+>
+  <article>
+    <header class="artikelkopf nacht streifen">
+      <div class="container artikelkopf__inner">
+        <nav aria-label="Brotkrumen" class="krumen">
+          <a href="/aktuelles/">Aktuelles</a> <span aria-hidden="true">/</span> <span>{data.rubrik}</span>
+        </nav>
+        <h1 class="artikelkopf__titel">{data.title}</h1>
+        <p class="lead">{data.description}</p>
+        <p class="meta">
+          <span>{data.autor}</span>
+          <time datetime={data.date.toISOString().slice(0, 10)}>{datum(data.date)}</time>
+        </p>
+      </div>
+    </header>
+
+    <div class="container">
+      <div class="img-frame titelbild">
+        <Picture
+          src={data.image}
+          alt={data.imageAlt}
+          widths={[800, 1300, 1900]}
+          sizes="(min-width: 80rem) 75rem, 95vw"
+          formats={['avif', 'webp']}
+          loading="eager"
+          fetchpriority="high"
+        />
+      </div>
+    </div>
+
+    <div class="section container text">
+      <div class="prose">
+        <Content />
+      </div>
+      <footer class="autor">
+        <p>
+          Geschrieben von <strong>{data.autor}</strong>. Fragen oder Hinweise? Schreib uns an{' '}
+          <a href={`mailto:${verein.email}`}>{verein.email}</a>.
+        </p>
+      </footer>
+    </div>
+  </article>
+
+  <section class="section getoent" aria-labelledby="weiterlesen">
+    <div class="container">
+      <h2 id="weiterlesen" class="h2 weiter__titel">Weitere Meldungen</h2>
+      <div class="raster">
+        {weitere.map((b) => <NewsCard beitrag={b} />)}
+      </div>
+    </div>
+  </section>
+
+  <MitmachenCta />
+</BaseLayout>
+
+<style>
+  .artikelkopf__inner {
+    display: grid;
+    gap: 1.4rem;
+    max-width: 64rem;
+    padding-top: clamp(3rem, 2rem + 4vw, 6rem);
+    padding-bottom: clamp(7rem, 5rem + 8vw, 12rem);
+  }
+  .krumen {
+    font-family: var(--font-display-stack);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--on-nacht-2);
+  }
+  .krumen a {
+    color: var(--rot-hell);
+  }
+  .artikelkopf__titel {
+    font-size: var(--step-4);
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    font-size: 0.9rem;
+    color: var(--on-nacht-2);
+  }
+  .meta span {
+    color: var(--on-nacht);
+    font-weight: 600;
+  }
+  .titelbild {
+    aspect-ratio: 21 / 9;
+    margin-top: clamp(-10rem, -4rem - 6vw, -5rem);
+    box-shadow: 0 1.5rem 3rem -1.5rem rgb(0 0 0 / 0.45);
+  }
+  .text {
+    display: grid;
+    justify-items: center;
+  }
+  .text .prose {
+    width: 100%;
+  }
+  .autor {
+    width: 100%;
+    max-width: 40rem;
+    margin-top: 3.5rem;
+    padding-top: 1.5rem;
+    border-top: 3px solid var(--ink);
+    font-size: 0.95rem;
+    color: var(--ink-2);
+  }
+  .autor a {
+    color: var(--rot-2);
+  }
+  .weiter__titel {
+    margin-bottom: 2.5rem;
+  }
+  .raster {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3rem 2rem;
+  }
+  @media (max-width: 64rem) {
+    .raster {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .raster > :global(:nth-child(3)) {
+      display: none;
+    }
+  }
+  @media (max-width: 60rem) {
+    .titelbild {
+      aspect-ratio: 3 / 2;
+    }
+  }
+  @media (max-width: 40rem) {
+    .raster {
+      grid-template-columns: 1fr;
+    }
+    .raster > :global(:nth-child(3)) {
+      display: grid;
+    }
+  }
+</style>

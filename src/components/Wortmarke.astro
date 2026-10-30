@@ -1,0 +1,43 @@
+---
+// Typografische Wortmarke als Platzhalter für ein Sponsorenlogo
+import type { Sponsor } from '../data/sponsoren';
+
+interface Props {
+  sponsor: Sponsor;
+}
+const { sponsor } = Astro.props;
+---
+
+<span class:list={['marke', `marke--${sponsor.stil}`]}>{sponsor.name}</span>
+
+<style>
+  .marke {
+    display: block;
+    font-family: var(--font-display-stack);
+    line-height: 1.05;
+    color: var(--ink);
+  }
+  .marke--block {
+    font-weight: 800;
+    font-size: 1.45rem;
+    text-transform: uppercase;
+  }
+  .marke--kursiv {
+    font-weight: 600;
+    font-style: oblique 8deg;
+    font-size: 1.6rem;
+  }
+  .marke--gesperrt {
+    font-weight: 600;
+    font-size: 1.05rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+  }
+  .marke--klein {
+    font-family: var(--font-body-stack);
+    font-weight: 600;
+    font-size: 1.3rem;
+    text-transform: lowercase;
+    letter-spacing: -0.02em;
+  }
+</style>

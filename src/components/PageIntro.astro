@@ -1,0 +1,37 @@
+---
+// Seitenkopf als dunkles Band mit Trikotstreifen
+interface Props {
+  eyebrow: string;
+  title: string;
+  lead?: string;
+}
+const { eyebrow, title, lead } = Astro.props;
+---
+
+<section class="intro nacht streifen">
+  <div class="container intro__inner">
+    <span class="eyebrow">{eyebrow}</span>
+    <h1 class="display" set:html={title} />
+    {lead && <p class="lead">{lead}</p>}
+    <slot />
+  </div>
+</section>
+
+<style>
+  .intro {
+    border-bottom: 6px solid var(--rot);
+  }
+  .intro__inner {
+    padding-top: clamp(3.5rem, 2rem + 6vw, 7rem);
+    padding-bottom: clamp(3rem, 2rem + 4vw, 5.5rem);
+    display: grid;
+    gap: 1.5rem;
+  }
+  h1 {
+    max-width: 14ch;
+  }
+  h1 :global(em) {
+    font-style: normal;
+    color: var(--rot-hell);
+  }
+</style>

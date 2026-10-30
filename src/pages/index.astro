@@ -1,0 +1,406 @@
+---
+import { Picture } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Arrow from '../components/Arrow.astro';
+import Spielkarte from '../components/Spielkarte.astro';
+import Tabelle from '../components/Tabelle.astro';
+import Form from '../components/Form.astro';
+import NewsCard from '../components/NewsCard.astro';
+import TeamCard from '../components/TeamCard.astro';
+import Wortmarke from '../components/Wortmarke.astro';
+import MitmachenCta from '../components/MitmachenCta.astro';
+import { verein } from '../data/verein';
+import { naechstesSpiel, letztesSpiel, form, eigeneZeile, liga } from '../data/saison';
+import { hauptsponsor, premium } from '../data/sponsoren';
+
+import heroBild from '../assets/images/hero-flutlicht.jpg';
+import heimspielBild from '../assets/images/heimspiel.jpg';
+
+const news = (await getCollection('aktuelles')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf()).slice(0, 3);
+const startTeams = ['erste-herren', 'frauen', 'a-junioren', 'b-juniorinnen', 'f-junioren', 'bambini'];
+const teams = (await getCollection('mannschaften'))
+  .filter((t) => startTeams.includes(t.id))
+  .sort((a, b) => a.data.order - b.data.order);
+
+const zahlen = [
+  { wert: String(verein.gruendung), label: 'gegründet' },
+  { wert: String(verein.mitglieder), label: 'Mitglieder' },
+  { wert: '9', label: 'Mannschaften' },
+  { wert: String(verein.ehrenamtliche), label: 'Ehrenamtliche' },
+];
+---
+
+<BaseLayout
+  title="Startseite"
+  description="SV Musterstadt 1921: Fußball für alle in Musterstadt. Spielplan, Tabelle, Mannschaften und Trainingszeiten, Probetraining jederzeit."
+>
+  <section class="hero nacht" aria-labelledby="hero-titel">
+    <div class="hero__text streifen">
+      <div class="hero__inhalt">
+        <span class="eyebrow">Seit {verein.gruendung} · {verein.sportpark}</span>
+        <h1 id="hero-titel" class="display">Hier spielt <span class="akzent">Musterstadt.</span></h1>
+        <p class="lead">
+          Neun Mannschaften, von den Bambini bis zu den Alten Herren. Ein Platz am Mühlbach, ein Vereinsheim mit der besten Bratwurst
+          im Kreis und Platz für alle, die mitspielen wollen.
+        </p>
+        <div class="hero__aktionen">
+          <a href="/mitmachen/" class="btn btn--rot">Probetraining <Arrow /></a>
+          <a href="/spielplan/" class="btn btn--rand">Spielplan &amp; Tabelle</a>
+        </div>
+      </div>
+      <dl class="hero__zahlen zahlen" aria-label="Der Verein in Zahlen">
+        {
+          zahlen.map((z) => (
+            <div>
+              <dt>{z.label}</dt>
+              <dd>{z.wert}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+    <div class="hero__bild img-frame">
+      <Picture
+        src={heroBild}
+        alt="Eckfahne an einem Fußballplatz am Abend, im Hintergrund leuchtet das Flutlicht durch den Nebel"
+        widths={[400, 560, 720, 960, 1200, 1500]}
+        sizes="(min-width: 60rem) 42vw, 100vw"
+        formats={['avif', 'webp']}
+        loading="eager"
+        fetchpriority="high"
+      />
+    </div>
+  </section>
+
+  <section class="section container" aria-labelledby="spieltag-titel">
+    <div class="kopf">
+      <div>
+        <span class="eyebrow">1. Herren · {liga}</span>
+        <h2 id="spieltag-titel" class="h2">Spieltag</h2>
+      </div>
+      <a href="/spielplan/" class="link-pfeil">Kompletter Spielplan <Arrow /></a>
+    </div>
+    <div class="spieltag">
+      <div class="spieltag__karten">
+        <Spielkarte spiel={naechstesSpiel} label="Nächstes Spiel" />
+        <Spielkarte spiel={letztesSpiel} label="Letztes Spiel" />
+      </div>
+      <aside class="spieltag__tabelle" aria-labelledby="tabelle-titel">
+        <div class="spieltag__stand">
+          <div>
+            <h3 id="tabelle-titel" class="h3">Tabelle</h3>
+            <p class="spieltag__platz zahlen">
+              Platz {eigeneZeile.platz} · {eigeneZeile.punkte} Punkte
+            </p>
+          </div>
+          <Form form={form} />
+        </div>
+        <Tabelle bis={6} />
+        <a href="/spielplan/#tabelle" class="link-pfeil">Ganze Tabelle <Arrow /></a>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section getoent" aria-labelledby="news-titel">
+    <div class="container">
+      <div class="kopf">
+        <div>
+          <span class="eyebrow">Aktuelles</span>
+          <h2 id="news-titel" class="h2">Neues vom Mühlbach</h2>
+        </div>
+        <a href="/aktuelles/" class="link-pfeil">Alle Meldungen <Arrow /></a>
+      </div>
+      <div class="news-grid">
+        {news.map((b, i) => <NewsCard beitrag={b} gross={i === 0} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="heimspiel on-image" aria-labelledby="heimspiel-titel">
+    <div class="heimspiel__bild">
+      <Picture
+        src={heimspielBild}
+        alt=""
+        widths={[800, 1200, 1800, 2200]}
+        sizes="100vw"
+        formats={['avif', 'webp']}
+      />
+    </div>
+    <div class="container heimspiel__text">
+      <span class="eyebrow">Heimspiel</span>
+      <h2 id="heimspiel-titel" class="display">Sonntag, <span class="akzent">15 Uhr.</span></h2>
+      <p class="lead">
+        Bratwurst vom Grill, Kreide auf dem Rasen und 300 Leute an der Bande. Eintritt 4 €, Kinder und Mitglieder frei. Das Vereinsheim
+        öffnet um 11 Uhr.
+      </p>
+      <a href="/verein/#anfahrt" class="btn btn--rand">Anfahrt zum Sportpark</a>
+    </div>
+  </section>
+
+  <section class="section container" aria-labelledby="teams-titel">
+    <div class="kopf">
+      <div>
+        <span class="eyebrow">Mannschaften</span>
+        <h2 id="teams-titel" class="h2">Von U7 bis Ü32</h2>
+      </div>
+      <a href="/mannschaften/" class="link-pfeil">Alle neun Mannschaften <Arrow /></a>
+    </div>
+    <div class="team-grid">
+      {teams.map((t) => <TeamCard team={t} />)}
+    </div>
+  </section>
+
+  <section class="section--tight container sponsoren" aria-labelledby="sponsoren-titel">
+    <div class="sponsoren__kopf">
+      <h2 id="sponsoren-titel" class="eyebrow">Unsere Partner</h2>
+      <a href="/sponsoren/" class="link-pfeil">Alle Sponsoren <Arrow /></a>
+    </div>
+    <ul class="sponsoren__liste">
+      <li class="sponsoren__haupt">
+        <span class="sponsoren__rolle">Hauptsponsor</span>
+        <a href={hauptsponsor.url}><Wortmarke sponsor={{ name: hauptsponsor.name, branche: hauptsponsor.branche, stil: 'block' }} /></a>
+      </li>
+      {
+        premium.map((s) => (
+          <li>
+            <Wortmarke sponsor={s} />
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <MitmachenCta />
+</BaseLayout>
+
+<style>
+  .hero {
+    display: grid;
+    grid-template-columns: 1.35fr 1fr;
+    min-height: min(88vh, 54rem);
+  }
+  .hero__text {
+    display: grid;
+    grid-template-rows: 1fr auto;
+    padding-left: max(var(--gutter), calc((100vw - var(--max)) / 2 + var(--gutter)));
+    padding-right: var(--gutter);
+  }
+  .hero__inhalt {
+    display: grid;
+    gap: 1.6rem;
+    align-content: center;
+    padding-block: clamp(3rem, 2rem + 5vw, 6rem);
+  }
+  .hero__aktionen {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .hero__zahlen {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    margin: 0;
+    border-top: 1px solid var(--nacht-line);
+  }
+  .hero__zahlen div {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 0.2rem;
+    padding: 1.4rem 1rem 1.6rem 0;
+  }
+  .hero__zahlen div + div {
+    padding-left: 1.25rem;
+    border-left: 1px solid var(--nacht-line);
+  }
+  .hero__zahlen dd {
+    margin: 0;
+    font-family: var(--font-display-stack);
+    font-weight: 800;
+    font-size: var(--step-3);
+    line-height: 1;
+  }
+  .hero__zahlen dt {
+    font-size: 0.85rem;
+    color: var(--on-nacht-2);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .hero__bild {
+    border-radius: 0;
+  }
+
+  .spieltag {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: clamp(1.5rem, 1rem + 2vw, 3rem);
+    align-items: start;
+  }
+  .spieltag__karten {
+    display: grid;
+    gap: 1rem;
+  }
+  .spieltag__tabelle {
+    display: grid;
+    gap: 1.25rem;
+    justify-items: start;
+  }
+  .spieltag__tabelle > :global(.tabelle) {
+    width: 100%;
+  }
+  .spieltag__stand {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: end;
+    gap: 1rem;
+  }
+  .spieltag__platz {
+    margin-top: 0.4rem;
+    color: var(--ink-3);
+  }
+
+  .news-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3rem 2rem;
+  }
+  .news-grid > :global(:first-child) {
+    grid-column: 1 / -1;
+  }
+
+  .heimspiel {
+    position: relative;
+    display: grid;
+    min-height: 40rem;
+    color: #fff;
+    isolation: isolate;
+  }
+  .heimspiel__bild {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+  }
+  .heimspiel__bild :global(picture),
+  .heimspiel__bild :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .heimspiel__bild::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgb(10 12 16 / 0.85) 0%, rgb(10 12 16 / 0.55) 55%, rgb(10 12 16 / 0.15) 100%);
+  }
+  .heimspiel__text {
+    display: grid;
+    gap: 1.5rem;
+    align-content: center;
+    justify-items: start;
+    padding-block: var(--section);
+  }
+  .heimspiel__text .lead {
+    color: #e6e8eb;
+    max-width: 30em;
+  }
+
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+
+  .sponsoren {
+    border-top: 1px solid var(--line);
+  }
+  .sponsoren__kopf {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .sponsoren__liste {
+    display: grid;
+    grid-template-columns: 1.4fr repeat(4, 1fr);
+    gap: 1rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .sponsoren__liste li {
+    display: grid;
+    align-content: center;
+    gap: 0.4rem;
+    min-height: 7rem;
+    padding: 1.25rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    text-align: center;
+  }
+  .sponsoren__liste a {
+    text-decoration: none;
+  }
+  .sponsoren__liste a:hover :global(.marke) {
+    color: var(--rot);
+  }
+  .sponsoren__haupt {
+    background: var(--kreide-2);
+  }
+  .sponsoren__rolle {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--rot-2);
+  }
+
+  @media (max-width: 64rem) {
+    .spieltag {
+      grid-template-columns: 1fr;
+    }
+    .team-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .sponsoren__liste {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .sponsoren__haupt {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (max-width: 60rem) {
+    .hero {
+      grid-template-columns: 1fr;
+    }
+    .hero__text {
+      padding-left: var(--gutter);
+    }
+    .hero__bild {
+      order: -1;
+      aspect-ratio: 16 / 10;
+    }
+    .hero__bild :global(img) {
+      object-position: 50% 70%;
+    }
+  }
+  @media (max-width: 40rem) {
+    .hero__zahlen {
+      grid-template-columns: 1fr 1fr;
+    }
+    .hero__zahlen div:nth-child(odd) {
+      padding-left: 0;
+      border-left: 0;
+    }
+    .hero__zahlen div:nth-child(n + 3) {
+      border-top: 1px solid var(--nacht-line);
+    }
+    .news-grid,
+    .team-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

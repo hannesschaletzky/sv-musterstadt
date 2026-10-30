@@ -1,0 +1,178 @@
+---
+import Logo from './Logo.astro';
+import Arrow from './Arrow.astro';
+import { verein, navigation, ersteller } from '../data/verein';
+---
+
+<footer class="footer nacht">
+  <div class="container">
+    <div class="footer__top">
+      <p class="footer__claim">Hier spielt <span class="akzent">Musterstadt.</span></p>
+      <a href="/mitmachen/" class="btn btn--rot">Probetraining <Arrow /></a>
+    </div>
+
+    <div class="footer__grid">
+      <div>
+        <Logo />
+        <p class="footer__muted">
+          Fußball für alle in {verein.ort}, seit {verein.gruendung}. {verein.mitglieder} Mitglieder, neun Mannschaften und ein Platz,
+          auf dem sonntags um drei die ganze Stadt zusammenkommt.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="footer__title">{verein.sportpark}</h2>
+        <address>
+          {verein.strasse}<br />
+          {`${verein.plz} ${verein.ort}`}<br />
+          <a href={verein.telefonHref}>{verein.telefon}</a><br />
+          <a href={`mailto:${verein.email}`}>{verein.email}</a>
+        </address>
+      </div>
+
+      <div>
+        <h2 class="footer__title">Vereinsheim</h2>
+        <dl>
+          {
+            verein.vereinsheim.map((o) => (
+              <div>
+                <dt>{o.tage}</dt>
+                <dd>{o.zeit}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+
+      <nav aria-label="Fußnavigation">
+        <h2 class="footer__title">Seiten</h2>
+        <ul>
+          {
+            navigation.map((item) => (
+              <li>
+                <a href={item.href}>{item.label}</a>
+              </li>
+            ))
+          }
+          <li><a href="/mitmachen/">Mitmachen</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <div class="footer__bottom">
+      <p>© {new Date().getFullYear()} {verein.langname} · Ein fiktiver Verein</p>
+      <ul>
+        <li><a href="/impressum/">Impressum</a></li>
+        <li><a href="/datenschutz/">Datenschutz</a></li>
+        <li><a href="/rss.xml">RSS</a></li>
+        <li>Website von <a href={ersteller.url}>{ersteller.name}</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    padding-top: var(--section);
+    padding-bottom: 2rem;
+    border-top: 6px solid var(--rot);
+  }
+  .footer__top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: space-between;
+    gap: 2rem;
+    padding-bottom: clamp(3rem, 2rem + 4vw, 5rem);
+    border-bottom: 1px solid var(--line);
+  }
+  .footer__claim {
+    font-family: var(--font-display-stack);
+    font-weight: 800;
+    font-size: var(--step-4);
+    line-height: 0.9;
+    text-transform: uppercase;
+    max-width: 12ch;
+  }
+  .footer__grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr 1fr 0.8fr;
+    gap: 2.5rem;
+    padding-block: 3.5rem;
+  }
+  .footer__grid > div:first-child {
+    display: grid;
+    gap: 1.25rem;
+    align-content: start;
+  }
+  .footer__muted {
+    color: var(--on-nacht-2);
+    max-width: 30ch;
+    font-size: 0.95rem;
+  }
+  .footer__title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--on-nacht-2);
+    margin-bottom: 1rem;
+  }
+  address {
+    font-style: normal;
+  }
+  address a,
+  nav a {
+    text-decoration: none;
+  }
+  address a:hover,
+  nav a:hover {
+    text-decoration: underline;
+  }
+  dl {
+    margin: 0;
+    display: grid;
+    gap: 0.6rem;
+  }
+  dt {
+    color: var(--on-nacht-2);
+    font-size: 0.9rem;
+  }
+  dd {
+    margin: 0;
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.4rem;
+  }
+  .footer__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.85rem;
+    color: var(--on-nacht-2);
+  }
+  .footer__bottom ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.5rem;
+  }
+  .footer__bottom a {
+    color: var(--on-nacht);
+  }
+  @media (max-width: 60rem) {
+    .footer__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (max-width: 34rem) {
+    .footer__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

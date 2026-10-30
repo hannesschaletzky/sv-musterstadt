@@ -1,0 +1,50 @@
+---
+// Eigenes Wappen oder ein neutrales Kürzel für den Gegner
+import Wappen from './Wappen.astro';
+import { eigenerVerein } from '../data/saison';
+
+interface Props {
+  verein: string;
+}
+const { verein } = Astro.props;
+const kuerzel = verein
+  .split(' ')
+  .filter((w) => !/^\d/.test(w))
+  .slice(0, 2)
+  .map((w) => w[0])
+  .join('');
+---
+
+{
+  verein === eigenerVerein ? (
+    <span class="badge badge--eigen">
+      <Wappen />
+    </span>
+  ) : (
+    <span class="badge badge--gast" aria-hidden="true">
+      {kuerzel}
+    </span>
+  )
+}
+
+<style>
+  .badge {
+    display: grid;
+    place-items: center;
+    width: var(--badge, 3.5rem);
+    height: var(--badge, 3.5rem);
+    flex: none;
+  }
+  .badge--eigen {
+    height: calc(var(--badge, 3.5rem) * 1.1);
+  }
+  .badge--gast {
+    border-radius: 50%;
+    border: 2px solid currentColor;
+    font-family: var(--font-display-stack);
+    font-weight: 800;
+    font-size: calc(var(--badge, 3.5rem) * 0.36);
+    letter-spacing: 0.04em;
+    opacity: 0.7;
+  }
+</style>
