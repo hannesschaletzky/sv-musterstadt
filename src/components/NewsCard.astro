@@ -25,16 +25,16 @@ const Ueberschrift = ebene;
       loading={eager ? 'eager' : 'lazy'}
       fetchpriority={eager ? 'high' : 'auto'}
     />
+    <span class="news__rubrik mono">{rubrik}</span>
   </div>
   <div class="news__text">
-    <p class="news__meta">
-      <span class="news__rubrik">{rubrik}</span>
+    <p class="news__meta mono">
       <time datetime={date.toISOString().slice(0, 10)}>{datum(date)}</time>
     </p>
     <Ueberschrift class="news__titel">
       <a href={`/aktuelles/${beitrag.id}/`}>{title}</a>
     </Ueberschrift>
-    {gross && <p class="news__teaser">{description}</p>}
+    <p class="news__teaser">{description}</p>
   </div>
 </article>
 
@@ -42,36 +42,40 @@ const Ueberschrift = ebene;
   .news {
     position: relative;
     display: grid;
-    gap: 1.1rem;
+    gap: 1rem;
     align-content: start;
   }
   .news__bild {
+    position: relative;
     aspect-ratio: 3 / 2;
+    border: 2px solid var(--ink);
+  }
+  .news__rubrik {
+    position: absolute;
+    left: 0.75rem;
+    bottom: 0.75rem;
+    padding: 0.3rem 0.55rem 0.25rem;
+    background: var(--gelb);
+    color: var(--ink);
+    border: 2px solid var(--ink);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transform: rotate(-2deg);
   }
   .news__text {
     display: grid;
     gap: 0.6rem;
   }
   .news__meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    align-items: center;
-    font-size: 0.85rem;
-    color: var(--ink-3);
-  }
-  .news__rubrik {
-    padding: 0.15rem 0.5rem 0.1rem;
-    background: var(--rot);
-    color: #fff;
-    font-family: var(--font-display-stack);
-    font-weight: 600;
-    letter-spacing: 0.08em;
+    font-size: 0.75rem;
     text-transform: uppercase;
+    color: var(--ink-3);
   }
   .news__titel {
     font-size: var(--step-2);
-    line-height: 1;
+    line-height: 0.92;
   }
   .news__titel a {
     text-decoration: none;
@@ -83,22 +87,27 @@ const Ueberschrift = ebene;
   }
   .news:hover .news__titel a,
   .news__titel a:focus-visible {
-    text-decoration: underline;
-    text-decoration-color: var(--rot);
-    text-decoration-thickness: 3px;
+    background: linear-gradient(var(--gelb), var(--gelb)) 0 88% / 100% 0.35em no-repeat;
   }
   .news__teaser {
     color: var(--ink-2);
+    font-size: 0.95rem;
+  }
+  .news:not(.news--gross) .news__teaser {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
   .news--gross .news__titel {
-    font-size: var(--step-3);
+    font-size: var(--step-4);
+    line-height: 0.86;
+  }
+  .news--gross .news__teaser {
+    font-size: var(--step-1);
+    line-height: 1.45;
   }
   @media (min-width: 64rem) {
-    .news--gross {
-      grid-template-columns: 1.5fr 1fr;
-      align-items: end;
-      gap: 2.5rem;
-    }
     .news--gross .news__bild {
       aspect-ratio: 16 / 10;
     }

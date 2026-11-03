@@ -1,0 +1,1034 @@
+/* Stil „Schlicht“: weiß, Systemschrift, normale Schriftgrößen, feine graue Linien.
+   Keine Effekte, keine großen Farbflächen, Rot nur für kleine Akzente.
+   Das doppelte :root hebt die Spezifität über die komponenteneigenen Styles. */
+:root:root[data-stil='schlicht'] {
+  --kreide: #ffffff;
+  --kreide-2: #f5f5f4;
+  --kreide-3: #e7e5e4;
+  --ink: #1c1917;
+  --ink-2: #44403c;
+  --ink-3: #6f6a65;
+  --line: #e7e5e4;
+  --rot: #b91c1c;
+  --rot-2: #991b1b;
+  --rot-hell: #ef8a8a;
+  --gelb: #b91c1c;
+  --nacht: #1c1917;
+  --nacht-2: #292524;
+  --nacht-line: #44403c;
+  --on-nacht: #fafaf9;
+  --on-nacht-2: #a8a29e;
+  --schatten: transparent;
+
+  --font-display-stack: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-body-stack: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono-stack: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  --step-2: clamp(1.35rem, 1.25rem + 0.5vw, 1.6rem);
+  --step-3: clamp(1.7rem, 1.5rem + 1vw, 2.2rem);
+  --step-4: clamp(2.1rem, 1.7rem + 2vw, 3rem);
+  --step-5: clamp(2.4rem, 1.8rem + 3vw, 3.6rem);
+  --section: clamp(3.5rem, 2.5rem + 4vw, 6rem);
+  --max: 72rem;
+  --radius: 10px;
+
+  & body::after {
+    display: none;
+  }
+  & h1,
+  & h2,
+  & h3,
+  & h4 {
+    font-weight: 650;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    text-transform: none;
+  }
+  & .btn,
+  & .eyebrow,
+  & .mono,
+  & .link-pfeil {
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  & ::selection {
+    background: var(--kreide-3);
+    color: var(--ink);
+  }
+
+  /* Alle Farbflächen werden hell */
+  & .rot,
+  & .nacht:not(.kopfbild),
+  & .getoent {
+    background-color: var(--kreide-2);
+    color: var(--ink);
+    color-scheme: light;
+    --nacht: #ffffff;
+    --nacht-2: #ffffff;
+    --nacht-line: var(--line);
+    --on-nacht: var(--ink);
+    --on-nacht-2: var(--ink-3);
+    --line: #e7e5e4;
+    --ink-2: #44403c;
+    --ink-3: #6f6a65;
+  }
+  & .rot,
+  & .artikelkopf.nacht,
+  & .nf.nacht {
+    background-color: var(--kreide);
+  }
+  & .artikelkopf,
+  & .nf {
+    border-bottom: 1px solid var(--line);
+  }
+  & .streifen {
+    background-image: none;
+  }
+  & .nacht:not(.kopfbild) :focus-visible,
+  & .rot :focus-visible {
+    outline-color: var(--rot);
+  }
+
+  & .eyebrow,
+  & .nacht .eyebrow,
+  & .on-image .eyebrow {
+    padding: 0;
+    background: none;
+    color: var(--ink-3);
+    font-family: var(--font-body-stack);
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+  & .on-image .eyebrow,
+  & .kopfbild .eyebrow {
+    color: var(--on-nacht-2);
+  }
+  & .eyebrow::before {
+    display: none;
+  }
+  & .display {
+    font-size: var(--step-5);
+    line-height: 1.1;
+  }
+  & .h2 {
+    font-size: var(--step-3);
+    line-height: 1.2;
+  }
+  & .h3 {
+    line-height: 1.2;
+  }
+  & .lead {
+    color: var(--ink-2);
+  }
+  & .akzent,
+  & .hohl,
+  & .nacht .akzent,
+  & .on-image .akzent {
+    color: inherit;
+    -webkit-text-stroke: 0;
+  }
+
+  & .btn {
+    padding: 0.7rem 1.15rem;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--kreide);
+    color: var(--ink);
+    box-shadow: none;
+    font-family: var(--font-body-stack);
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+  & .btn:hover,
+  & .btn:active {
+    transform: none;
+    box-shadow: none;
+    background: var(--kreide-2);
+  }
+  & .btn--rot,
+  & .btn--gelb,
+  & .rot .btn--rot,
+  & .nacht .btn--rot {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: #fff;
+  }
+  & .btn--rot:hover,
+  & .btn--gelb:hover,
+  & .nacht .btn--rot:hover {
+    background: var(--ink-2);
+    border-color: var(--ink-2);
+  }
+  & .btn--rand,
+  & .nacht .btn--rand,
+  & .on-image .btn--rand {
+    background: var(--kreide);
+    border-color: var(--line);
+    color: var(--ink);
+  }
+  & .btn--rand:hover,
+  & .nacht .btn--rand:hover {
+    background: var(--kreide-2);
+    border-color: var(--kreide-3);
+    color: var(--ink);
+  }
+
+  & .link-pfeil {
+    padding: 0;
+    background: none;
+    color: var(--ink);
+    font-family: var(--font-body-stack);
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-decoration-color: var(--kreide-3);
+    text-underline-offset: 0.25em;
+  }
+  & .link-pfeil:hover {
+    background: none;
+    color: var(--rot);
+    text-decoration-color: currentColor;
+  }
+  & .link-pfeil svg {
+    width: 0.8rem;
+    height: 0.8rem;
+  }
+  & .kopf {
+    padding-top: 0;
+    border-top: 0;
+    margin-bottom: 1.75rem;
+  }
+  & .kopf > div {
+    gap: 0.35rem;
+  }
+  & .prose blockquote {
+    padding: 0 0 0 1.1rem;
+    background: none;
+    border-left: 2px solid var(--kreide-3);
+    box-shadow: none;
+    transform: none;
+    color: var(--ink-2);
+    font-family: var(--font-body-stack);
+    font-size: var(--step-1);
+    font-weight: 400;
+    font-style: italic;
+    line-height: 1.5;
+    text-transform: none;
+  }
+  & .img-frame {
+    background: var(--kreide-2);
+  }
+
+  /* Kopfzeile */
+  & .demobar {
+    --demobar-bg: var(--ink);
+    --demobar-fg: #fff;
+    font-family: var(--font-body-stack);
+    font-size: 0.8rem;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  & .ticker {
+    display: none;
+  }
+  & .header {
+    background: color-mix(in srgb, var(--kreide) 92%, transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  & .header__inner {
+    min-height: 4rem;
+  }
+  & .header__nav ul {
+    gap: 1.6rem;
+  }
+  & .header__nav a,
+  & .header__nav a:hover,
+  & .header__nav a[aria-current='page'] {
+    padding: 0.4rem 0;
+    background: none;
+    color: var(--ink-2);
+    font-family: var(--font-body-stack);
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-transform: none;
+  }
+  & .header__nav a:hover,
+  & .header__nav a[aria-current='page'] {
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.4em;
+  }
+  & .header__nr {
+    display: none;
+  }
+  & .header__cta,
+  & .header__cta:hover {
+    padding: 0.55rem 1rem;
+    border: 0;
+    border-radius: 8px;
+    background: var(--ink);
+    color: #fff;
+    box-shadow: none;
+    transform: none;
+    font-family: var(--font-body-stack);
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-transform: none;
+  }
+  & .header__cta:hover {
+    background: var(--ink-2);
+  }
+  & .header__toggle {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: none;
+    box-shadow: none;
+  }
+  & .header__toggle span {
+    height: 1.5px;
+    left: 0.7rem;
+    right: 0.7rem;
+  }
+  & .header__toggle span:nth-child(2) {
+    right: 0.7rem;
+  }
+  & .menu li {
+    border-top: 1px solid var(--line);
+  }
+  & .menu li a {
+    font-family: var(--font-body-stack);
+    font-size: var(--step-2);
+    font-weight: 600;
+    text-transform: none;
+  }
+  & .menu li a::before {
+    display: none;
+  }
+  & .menu li a[aria-current='page'] {
+    color: var(--rot);
+  }
+  & .menu__close {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+  }
+  & .logo__wappen {
+    height: 2.4rem;
+  }
+  & .logo__name {
+    font-family: var(--font-body-stack);
+    font-size: 1.05rem;
+    font-weight: 650;
+    line-height: 1.1;
+    text-transform: none;
+  }
+  & .logo__jahr {
+    font-family: var(--font-body-stack);
+    font-size: 0.78rem;
+    font-weight: 400;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--ink-3);
+    opacity: 1;
+  }
+
+  /* Startseite: Text, nächstes Spiel daneben, sonst nichts */
+  & .hero__inner {
+    gap: 2rem;
+    padding-block: clamp(3rem, 2rem + 4vw, 5.5rem);
+  }
+  & .hero__masthead,
+  & .hero__foto,
+  & .hero__stempel,
+  & .schal {
+    display: none;
+  }
+  & .hero__titel {
+    display: block;
+    font-size: var(--step-5);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+  & .hero__zeile,
+  & .hero__zeile--gross {
+    display: block;
+    margin: 0;
+    font-size: inherit;
+    color: var(--ink);
+  }
+  & .hero__zeile--gross {
+    color: var(--ink-3);
+  }
+  & .hero__unten {
+    grid-template-columns: 1.2fr 1fr;
+    align-items: start;
+  }
+  & .hero__text {
+    gap: 1.5rem;
+  }
+  & .hero__text .lead {
+    color: var(--ink-2);
+    font-weight: 400;
+  }
+  & .hero__aktionen {
+    gap: 0.6rem;
+  }
+  & .hero__zahlen {
+    gap: 0 2rem;
+    margin-top: 0.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line);
+  }
+  & .hero__zahlen dd {
+    font-family: var(--font-body-stack);
+    font-size: var(--step-2);
+    font-weight: 650;
+    line-height: 1.2;
+    color: var(--ink);
+  }
+  & .hero__zahlen dt {
+    color: var(--ink-3);
+    font-size: 0.85rem;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  /* Kleines Bild über der Spielkarte, rechte Spalte */
+  & .hero__bild {
+    display: block;
+    grid-column: 2;
+    grid-row: 1;
+    aspect-ratio: 2 / 1;
+  }
+  & .hero__bild img {
+    object-position: 50% 62%;
+  }
+  & .hero__text {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+  }
+  & .hero .ticket {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  & .hero__unten {
+    row-gap: 1rem;
+  }
+
+  /* Nächstes Spiel als einfache Karte */
+  & .ticket,
+  & .ticket:hover {
+    grid-template-columns: 1fr;
+    background: var(--kreide);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: none;
+    transform: none;
+  }
+  & .ticket__haupt {
+    gap: 0.9rem;
+    padding: 1.4rem;
+    border: 0;
+  }
+  & .ticket__kopf {
+    padding-bottom: 0;
+    border: 0;
+    color: var(--ink-3);
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  & .ticket__kopf span:first-child {
+    color: var(--ink-3);
+  }
+  & .ticket__paarung {
+    font-family: var(--font-body-stack);
+    font-size: var(--step-2);
+    font-weight: 650;
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+    text-transform: none;
+  }
+  & .ticket__gegen {
+    padding: 0;
+    color: var(--ink-3);
+    font-size: 0.85rem;
+    font-weight: 400;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  & .ticket__daten {
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.9rem;
+  }
+  & .ticket__daten div {
+    grid-template-columns: 6rem 1fr;
+  }
+  & .ticket__daten dt {
+    text-transform: none;
+  }
+  & .ticket__daten dd {
+    font-weight: 500;
+  }
+  & .ticket__abriss {
+    display: none;
+  }
+
+  /* Ergebnis */
+  & .tafel {
+    gap: 1.25rem;
+    background: var(--kreide);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: none;
+    --badge: 2.75rem;
+  }
+  & .tafel::before {
+    display: none;
+  }
+  & .tafel__kopf,
+  & .tafel__fuss {
+    padding-inline: 0;
+    color: var(--ink-3);
+    font-size: 0.85rem;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  & .tafel__label {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  & .tafel__fuss {
+    border-top: 1px solid var(--line);
+  }
+  & .tafel__team {
+    font-family: var(--font-body-stack);
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.25;
+    text-transform: none;
+  }
+  & .tafel__stand,
+  & .tafel__stand time {
+    gap: 0;
+  }
+  & .tafel__ziffer {
+    display: flex;
+    min-width: 0;
+    padding: 0;
+    background: none;
+    border: 0;
+    color: var(--ink);
+    font-family: var(--font-body-stack);
+    font-size: clamp(2rem, 1.6rem + 1.5vw, 2.8rem);
+    font-weight: 650;
+    text-shadow: none;
+  }
+  & .tafel__stand--zeit .tafel__ziffer {
+    font-size: clamp(1.7rem, 1.4rem + 1.2vw, 2.3rem);
+  }
+  & .tafel__ziffer::after {
+    display: none;
+  }
+  & .tafel__ziffer + .tafel__ziffer::before {
+    content: ':';
+    padding-inline: 0.12em;
+    color: var(--ink-3);
+  }
+  & .badge--gast {
+    border-width: 1px;
+    font-family: var(--font-body-stack);
+    font-weight: 600;
+    opacity: 1;
+    color: var(--ink-3);
+  }
+  & .form {
+    gap: 0.3rem;
+  }
+  & .form__spiel {
+    width: 1.6rem;
+    height: 1.6rem;
+    border: 0;
+    border-radius: 50%;
+    font-family: var(--font-body-stack);
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  & .form__spiel--S {
+    background: #dcfce7;
+    color: #166534;
+  }
+  & .form__spiel--U {
+    background: var(--kreide-2);
+    color: var(--ink-2);
+  }
+  & .form__spiel--N {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+  & .tabelle table {
+    font-family: var(--font-body-stack);
+    font-size: 0.9rem;
+    border-top: 0;
+    border-bottom: 0;
+  }
+  & .tabelle thead th {
+    font-family: var(--font-body-stack);
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: none;
+    border-bottom: 1px solid var(--line);
+  }
+  & .tabelle .platz {
+    border-left-width: 3px;
+    font-weight: 500;
+  }
+  & .tabelle .punkte {
+    font-size: inherit;
+    font-weight: 600;
+  }
+  & .tabelle .eigen {
+    background: var(--kreide-2);
+    color: inherit;
+  }
+  & .tabelle .eigen th,
+  & .tabelle .eigen td {
+    font-weight: 600;
+    border-bottom-color: var(--line);
+  }
+  & .tabelle .eigen th::after {
+    display: none;
+  }
+  & .legende,
+  & .spieltag__form,
+  & .spieltag__platz {
+    color: var(--ink-3);
+    font-family: var(--font-body-stack);
+    font-size: 0.85rem;
+    text-transform: none;
+  }
+  & .spieltag__platz-nr {
+    width: auto;
+    height: auto;
+    background: none;
+    color: var(--ink);
+    font-family: var(--font-body-stack);
+    font-size: inherit;
+    font-weight: 600;
+  }
+
+  /* Meldungen */
+  & .bote__kopf {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: end;
+    gap: 1rem 3rem;
+    margin-bottom: 1.75rem;
+    text-align: left;
+  }
+  & .bote__zeile {
+    padding: 0;
+    border: 0;
+  }
+  & .bote__zeile:first-child,
+  & .bote__zeile:last-child span {
+    display: none;
+  }
+  & .bote__titel {
+    font-size: var(--step-3);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+  & .bote__raster {
+    column-gap: 2rem;
+  }
+  & .bote__raster > :first-child {
+    padding-right: 0;
+  }
+  & .bote__raster > :not(:first-child) {
+    padding-left: 0;
+    border-left: 0;
+  }
+  & .bote__raster > :nth-child(3) {
+    padding-top: 0;
+    border-top: 0;
+  }
+  & .news {
+    gap: 0.8rem;
+  }
+  & .news__bild {
+    border: 0;
+    border-radius: var(--radius);
+  }
+  & .news__rubrik {
+    display: none;
+  }
+  & .news__meta {
+    color: var(--ink-3);
+    font-size: 0.85rem;
+    text-transform: none;
+  }
+  & .news__titel {
+    font-size: var(--step-1);
+    line-height: 1.3;
+  }
+  & .news--gross .news__titel {
+    font-size: var(--step-2);
+    line-height: 1.25;
+  }
+  & .news--gross .news__teaser {
+    font-size: var(--step-0);
+  }
+  & .news:hover .news__titel a,
+  & .news__titel a:focus-visible {
+    background: none;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+
+  /* Heimspiel als ruhiger Textblock */
+  & .heimspiel,
+  & .cta {
+    min-height: 0;
+    background-color: var(--kreide);
+    border-top: 1px solid var(--line);
+  }
+  & .heimspiel__bild {
+    display: none;
+  }
+  & .heimspiel__text {
+    gap: 1rem;
+    padding-block: var(--section);
+  }
+  & .heimspiel__titel {
+    font-size: var(--step-4);
+    line-height: 1.1;
+  }
+  & .heimspiel__titel br {
+    display: none;
+  }
+  & .heimspiel__text .lead {
+    color: var(--ink-2);
+  }
+  & .heimspiel__preis {
+    position: static;
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    width: auto;
+    aspect-ratio: auto;
+    padding: 0;
+    order: -1;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+    color: var(--ink-3);
+    text-align: left;
+    transform: none;
+  }
+  & .heimspiel__betrag {
+    font-family: var(--font-body-stack);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  & .heimspiel__preis .mono {
+    font-size: 0.95rem;
+    font-weight: 400;
+    text-transform: none;
+  }
+  & .heimspiel .eyebrow {
+    display: none;
+  }
+
+  /* Mannschaften: Bild und Name */
+  & .album__raster {
+    gap: 2rem 1.5rem;
+  }
+  & .sticker,
+  & .sticker:hover {
+    padding: 0;
+    background: none;
+    border-radius: 0;
+    box-shadow: none;
+    transform: none;
+  }
+  & .sticker__bild {
+    aspect-ratio: 3 / 2;
+    border-radius: var(--radius);
+    background: var(--kreide-2);
+  }
+  & .sticker__bild::after,
+  & .sticker__nr,
+  & .sticker__bereich {
+    display: none;
+  }
+  & .sticker:hover .sticker__bild img {
+    transform: none;
+  }
+  & .sticker__text {
+    gap: 0.15rem;
+    padding: 0.75rem 0 0;
+    background: none;
+    color: var(--ink);
+    border-radius: 0;
+  }
+  & .sticker__titel {
+    font-size: var(--step-1);
+    line-height: 1.3;
+  }
+  & .sticker:hover .sticker__titel a {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+  & .sticker__meta {
+    color: var(--ink-3);
+    font-size: 0.85rem;
+    text-transform: none;
+  }
+  & .sticker:has(a:focus-visible) {
+    outline-color: var(--rot);
+    border-radius: var(--radius);
+  }
+
+  /* Sponsoren als schlichte Namensliste */
+  & .bande {
+    padding-block: calc(var(--section) * 0.7);
+    background: none;
+    border-top: 1px solid var(--line);
+  }
+  & .bande__kopf {
+    margin-bottom: 1rem;
+  }
+  & .bande__reihe {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 2rem;
+    width: calc(100% - var(--gutter) * 2);
+    max-width: calc(var(--max) - var(--gutter) * 2);
+    margin-inline: auto;
+    padding: 0;
+    background: none;
+  }
+  & .bande__tafel,
+  & .bande__tafel:nth-child(n) {
+    display: block;
+    min-height: 0;
+    padding: 0;
+    background: none;
+    color: var(--ink-2);
+    text-align: left;
+  }
+  & .bande__tafel--haupt a {
+    display: flex;
+    gap: 0.4rem;
+    align-items: baseline;
+  }
+  & .bande__rolle {
+    color: var(--ink-3);
+    font-family: var(--font-body-stack);
+    font-size: 0.85rem;
+    font-weight: 400;
+    letter-spacing: 0;
+    text-transform: none;
+    opacity: 1;
+  }
+  & .bande__rolle::after {
+    content: ':';
+  }
+  & .bande .marke,
+  & .marke {
+    font-family: var(--font-body-stack);
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  & .bande__rasen {
+    display: none;
+  }
+
+  /* Mitmachen: nur Text */
+  & .cta__inner {
+    grid-template-columns: 1fr;
+  }
+  & .cta__text {
+    gap: 1rem;
+    max-width: 40rem;
+  }
+  & .taktik {
+    display: none;
+  }
+
+  /* Seitenkopf */
+  & .intro {
+    margin-bottom: 0;
+    background-color: var(--kreide);
+    border-bottom: 1px solid var(--line);
+  }
+  & .intro::after {
+    display: none;
+  }
+  & .intro__inner {
+    gap: 1rem;
+    padding-block: clamp(2.5rem, 2rem + 3vw, 4.5rem);
+  }
+  & .intro h1 em {
+    color: var(--ink-3);
+  }
+
+  /* Fußzeile */
+  & .footer {
+    padding-top: calc(var(--section) * 0.7);
+    border-top: 1px solid var(--line);
+    background-color: var(--kreide-2);
+  }
+  & .footer__top,
+  & .footer__riese {
+    display: none;
+  }
+  & .footer__grid {
+    padding-block: 0 2.5rem;
+    border-top: 0;
+  }
+  & .footer__title {
+    margin-bottom: 0.6rem;
+    padding: 0;
+    background: none;
+    color: var(--ink);
+    font-family: var(--font-body-stack);
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+  & .footer__muted,
+  & .footer dt,
+  & .footer address,
+  & .footer dd {
+    color: var(--ink-2);
+    font-size: 0.9rem;
+  }
+  & .footer dd {
+    font-weight: 500;
+  }
+  & .footer nav a {
+    font-family: var(--font-body-stack);
+    font-size: 0.9rem;
+    font-weight: 400;
+    text-transform: none;
+    color: var(--ink-2);
+  }
+  & .footer__bottom {
+    margin-bottom: 1.5rem;
+    border-top: 1px solid var(--line);
+    color: var(--ink-3);
+    font-family: var(--font-body-stack);
+    font-size: 0.8rem;
+    text-transform: none;
+  }
+  & .footer__bottom a {
+    color: var(--ink-2);
+    font-weight: 500;
+  }
+
+  /* Einzelne Seiten */
+  & .krumen,
+  & .krumen a {
+    padding: 0;
+    background: none;
+    font-family: var(--font-body-stack);
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  & .krumen a {
+    color: var(--on-nacht-2);
+  }
+  & .artikelkopf .krumen a {
+    color: var(--ink-3);
+  }
+  & .ergebnis {
+    min-width: 3rem;
+    border: 0;
+    border-radius: 6px;
+    font-family: var(--font-body-stack);
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+  & .ergebnis--S {
+    background: #dcfce7;
+    color: #166534;
+  }
+  & .ergebnis--U {
+    background: var(--kreide-2);
+    color: var(--ink-2);
+  }
+  & .ergebnis--N {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+  & .spiele thead th {
+    font-family: var(--font-body-stack);
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  & .filter span {
+    padding: 0.45rem 0.9rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-family: var(--font-body-stack);
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  & .filter input:checked + span {
+    background: var(--ink);
+    border-color: var(--ink);
+  }
+
+  /* Zahlen und Kürzel der Unterseiten etwas leichter */
+  & .weg__nr,
+  & .beitragstabelle td,
+  & .faq__titel,
+  & .stand dd,
+  & .pakete__preis,
+  & .zeitstrahl__jahr,
+  & .vorstand__initialen,
+  & .anfahrt dt,
+  & .trainer__initialen,
+  & .kader__nr {
+    font-weight: 650;
+    letter-spacing: -0.02em;
+  }
+
+  @media (max-width: 60rem) {
+    & .hero__unten {
+      grid-template-columns: 1fr;
+      row-gap: 2rem;
+    }
+    & .hero__text,
+    & .hero__bild,
+    & .hero .ticket {
+      grid-column: auto;
+      grid-row: auto;
+    }
+    & .hero__bild {
+      aspect-ratio: 16 / 9;
+    }
+  }
+}

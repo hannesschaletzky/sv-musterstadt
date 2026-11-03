@@ -64,23 +64,25 @@ const zone = (platz: number) => (platz === 1 ? 'aufstieg' : platz === 2 ? 'releg
   table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.95rem;
+    font-family: var(--font-mono-stack);
+    font-size: 0.85rem;
+    border-top: 3px solid currentColor;
+    border-bottom: 3px solid currentColor;
   }
   th,
   td {
-    padding: 0.7rem 0.5rem;
+    padding: 0.65rem 0.5rem;
     text-align: right;
     border-bottom: 1px solid var(--line);
     white-space: nowrap;
   }
   thead th {
-    font-family: var(--font-display-stack);
-    font-weight: 600;
-    font-size: 0.9rem;
-    letter-spacing: 0.08em;
+    font-weight: 700;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--ink-3);
-    border-bottom-width: 2px;
+    border-bottom: 2px solid currentColor;
   }
   abbr {
     text-decoration: none;
@@ -90,12 +92,14 @@ const zone = (platz: number) => (platz === 1 ? 'aufstieg' : platz === 2 ? 'releg
     width: 100%;
   }
   tbody th {
+    font-family: var(--font-body-stack);
+    font-size: 0.95rem;
     font-weight: 400;
   }
   .platz {
     text-align: center;
-    font-weight: 600;
-    border-left: 4px solid transparent;
+    font-weight: 700;
+    border-left: 6px solid transparent;
   }
   .aufstieg .platz {
     border-left-color: var(--rasen);
@@ -107,14 +111,23 @@ const zone = (platz: number) => (platz === 1 ? 'aufstieg' : platz === 2 ? 'releg
     border-left-color: var(--rot);
   }
   .punkte {
-    font-weight: 600;
+    font-weight: 700;
+    font-size: 1rem;
   }
   .eigen {
-    background: color-mix(in srgb, var(--rot) 10%, transparent);
+    background: var(--rot);
+    color: #fff;
   }
   .eigen th,
   .eigen td {
     font-weight: 700;
+    border-bottom-color: var(--rot);
+  }
+  .eigen th::after {
+    content: '◀';
+    margin-left: 0.5rem;
+    font-size: 0.7em;
+    color: var(--gelb);
   }
   .legende {
     display: flex;
@@ -123,7 +136,9 @@ const zone = (platz: number) => (platz === 1 ? 'aufstieg' : platz === 2 ? 'releg
     list-style: none;
     margin: 1rem 0 0;
     padding: 0;
-    font-size: 0.85rem;
+    font-family: var(--font-mono-stack);
+    font-size: 0.75rem;
+    text-transform: uppercase;
     color: var(--ink-3);
   }
   .legende li {

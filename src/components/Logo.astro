@@ -6,7 +6,7 @@ import Wappen from './Wappen.astro';
   <span class="logo__wappen"><Wappen /></span>
   <span class="logo__text">
     <span class="logo__name">SV Musterstadt</span>
-    <span class="logo__jahr">Seit 1921 · Rot-Weiß</span>
+    <span class="logo__jahr">Rot-Weiß seit 1921</span>
   </span>
 </span>
 
@@ -14,31 +14,32 @@ import Wappen from './Wappen.astro';
   .logo {
     display: inline-flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.7rem;
     line-height: 1;
   }
   .logo__wappen {
     display: block;
-    height: 2.75rem;
+    height: 3rem;
     flex: none;
   }
   .logo__text {
     display: flex;
     flex-direction: column;
-    gap: 0.2rem;
+    gap: 0.25rem;
   }
   .logo__name {
     font-family: var(--font-display-stack);
-    font-weight: 800;
-    font-size: 1.45rem;
+    font-weight: 900;
+    font-size: 1.7rem;
+    line-height: 0.85;
     text-transform: uppercase;
-    letter-spacing: 0.01em;
   }
   .logo__jahr {
-    font-size: 0.7rem;
-    font-weight: 600;
-    letter-spacing: 0.16em;
+    font-family: var(--font-mono-stack);
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
-    opacity: 0.75;
+    opacity: 0.8;
   }
 </style>

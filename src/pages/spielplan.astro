@@ -193,10 +193,10 @@ const ereignisse = offen.map((s) => ({
     white-space: nowrap;
   }
   .spiele thead th {
-    font-family: var(--font-display-stack);
-    font-weight: 600;
-    font-size: 0.9rem;
-    letter-spacing: 0.08em;
+    font-family: var(--font-mono-stack);
+    font-weight: 700;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--ink-3);
     border-bottom-width: 2px;
@@ -235,17 +235,18 @@ const ereignisse = offen.map((s) => ({
     display: inline-block;
     min-width: 3.6rem;
     padding: 0.25rem 0.5rem 0.15rem;
-    border-radius: var(--radius);
-    font-family: var(--font-display-stack);
-    font-weight: 800;
-    font-size: 1.15rem;
+    border: 2px solid var(--ink);
+    font-family: var(--font-mono-stack);
+    font-weight: 700;
+    font-size: 0.95rem;
     color: #fff;
   }
   .ergebnis--S {
     background: var(--rasen);
   }
   .ergebnis--U {
-    background: #6b7280;
+    background: var(--kreide);
+    color: var(--ink);
   }
   .ergebnis--N {
     background: var(--rot-2);

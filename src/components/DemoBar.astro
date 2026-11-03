@@ -1,27 +1,80 @@
 ---
-import { ersteller } from '../data/verein';
+import { ersteller, stile } from '../data/verein';
 ---
 
-<aside class="demobar" aria-label="Hinweis zum Beispielprojekt">
-  <p class="container">
-    Beispielprojekt: Der Verein ist erfunden. Website gestaltet und entwickelt von{' '}
-    <a href={ersteller.url}>{ersteller.name}</a>
-  </p>
+<aside class="demobar mono" aria-label="Hinweis zum Beispielprojekt">
+  <div class="container demobar__inner">
+    <p>
+      Beispielprojekt: Der Verein ist erfunden. Website von <a href={ersteller.url}>{ersteller.name}</a>
+    </p>
+    <nav class="stilwahl" aria-label="Designvariante">
+      <span>Design:</span>
+      <ul>
+        {
+          stile
+            .filter((s) => s.imSchalter)
+            .map((s) => (
+              <li>
+                <a href={`?stil=${s.id}`} data-stil-link={s.id}>
+                  {s.label}
+                </a>
+              </li>
+            ))
+        }
+      </ul>
+    </nav>
+  </div>
 </aside>
 
 <style>
   .demobar {
-    background: var(--nacht);
-    color: var(--on-nacht-2);
-    font-size: 0.8rem;
-    letter-spacing: 0.02em;
+    --demobar-bg: var(--gelb);
+    --demobar-fg: var(--ink);
+    background: var(--demobar-bg);
+    color: var(--demobar-fg);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
   }
-  p {
-    padding-block: 0.55rem;
-    text-align: center;
+  .demobar__inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.25rem 1.5rem;
+    padding-block: 0.4rem;
   }
   a {
-    color: var(--on-nacht);
-    font-weight: 600;
+    font-weight: 700;
+  }
+  .stilwahl {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  ul {
+    display: flex;
+    gap: 0.2rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .stilwahl a {
+    display: block;
+    padding: 0.2rem 0.5rem 0.15rem;
+    border: 1px solid currentColor;
+    text-decoration: none;
+    opacity: 0.7;
+  }
+  .stilwahl a:hover {
+    opacity: 1;
+  }
+  /* Aktiver Stil: invertiert */
+  :global(:root[data-stil='schlicht']) [data-stil-link='schlicht'],
+  :global(:root[data-stil='flutlicht']) [data-stil-link='flutlicht'],
+  :global(:root[data-stil='plakat']) [data-stil-link='plakat'] {
+    opacity: 1;
+    background: var(--demobar-fg);
+    color: var(--demobar-bg);
   }
 </style>

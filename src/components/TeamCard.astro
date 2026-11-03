@@ -1,4 +1,5 @@
 ---
+// Mannschaft als Sammelsticker
 import { Picture } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 
@@ -8,12 +9,12 @@ interface Props {
   eager?: boolean;
 }
 const { team, ebene = 'h3', eager = false } = Astro.props;
-const { title, altersklasse, liga, image, imageAlt } = team.data;
+const { title, altersklasse, liga, image, imageAlt, order } = team.data;
 const Ueberschrift = ebene;
 ---
 
-<article class="team" data-bereich={team.data.bereich}>
-  <div class="img-frame hover-zoom team__bild">
+<article class="sticker" data-bereich={team.data.bereich}>
+  <div class="sticker__bild">
     <Picture
       src={image}
       alt={imageAlt}
@@ -23,61 +24,131 @@ const Ueberschrift = ebene;
       loading={eager ? 'eager' : 'lazy'}
       fetchpriority={eager ? 'high' : 'auto'}
     />
+    <span class="sticker__nr mono" aria-hidden="true">{String(order).padStart(2, '0')}</span>
+    <span class="sticker__bereich mono">{team.data.bereich}</span>
   </div>
-  <div class="team__text">
-    <Ueberschrift class="team__titel">
+  <div class="sticker__text">
+    <Ueberschrift class="sticker__titel">
       <a href={`/mannschaften/${team.id}/`}>{title}</a>
     </Ueberschrift>
-    <p class="team__meta">{altersklasse} · {liga}</p>
+    <p class="sticker__meta mono">{altersklasse} · {liga}</p>
   </div>
 </article>
 
 <style>
-  .team {
+  .sticker {
     position: relative;
     display: grid;
-    background: var(--nacht);
-    color: var(--on-nacht);
-    border-radius: var(--radius);
+    padding: 0.55rem;
+    background: #fff;
+    color: var(--ink);
+    border-radius: 0.9rem;
+    box-shadow:
+      0 1px 0 rgb(0 0 0 / 0.08),
+      0 14px 24px -14px rgb(0 0 0 / 0.45);
+    transform: rotate(var(--dreh, -1.2deg));
+    transition:
+      transform 0.3s var(--ease),
+      box-shadow 0.3s var(--ease);
+  }
+  .sticker:nth-child(3n + 2) {
+    --dreh: 1.1deg;
+  }
+  .sticker:nth-child(3n) {
+    --dreh: -0.4deg;
+  }
+  .sticker:hover {
+    transform: rotate(0deg) translateY(-4px);
+    box-shadow:
+      0 1px 0 rgb(0 0 0 / 0.08),
+      0 22px 30px -14px rgb(0 0 0 / 0.5);
+  }
+  .sticker__bild {
+    position: relative;
+    aspect-ratio: 4 / 3.4;
     overflow: hidden;
+    border-radius: 0.5rem 0.5rem 0 0;
+    background: var(--rot);
   }
-  .team__bild {
-    aspect-ratio: 4 / 3;
-    border-radius: 0;
+  .sticker__bild :global(picture),
+  .sticker__bild :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
-  .team__text {
+  .sticker__bild :global(img) {
+    transition: transform 0.8s var(--ease);
+  }
+  .sticker:hover .sticker__bild :global(img) {
+    transform: scale(1.04);
+  }
+  .sticker__nr {
+    position: absolute;
+    top: 0.6rem;
+    left: 0.6rem;
     display: grid;
-    gap: 0.4rem;
-    padding: 1.1rem 1.25rem 1.3rem;
-    border-top: 4px solid var(--rot);
+    place-items: center;
+    width: 2.6rem;
+    height: 2.6rem;
+    border-radius: 50%;
+    background: var(--gelb);
+    border: 2px solid var(--ink);
+    font-size: 0.95rem;
+    font-weight: 700;
   }
-  .team__titel {
+  .sticker__bereich {
+    position: absolute;
+    top: 0.8rem;
+    right: 0;
+    padding: 0.25rem 0.6rem 0.2rem;
+    background: var(--ink);
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .sticker__text {
+    display: grid;
+    gap: 0.35rem;
+    padding: 0.85rem 0.9rem 0.8rem;
+    background: var(--rot);
+    color: #fff;
+    border-radius: 0 0 0.5rem 0.5rem;
+  }
+  /* Schrägschnitt wie das Namensband auf Sammelbildern */
+  .sticker__bild::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 0.8rem;
+    background: var(--rot);
+    clip-path: polygon(0 100%, 100% 0, 100% 100%);
+  }
+  .sticker__titel {
     font-size: var(--step-2);
-    line-height: 1;
+    line-height: 0.9;
   }
-  .team__titel a {
+  .sticker__titel a {
     text-decoration: none;
   }
-  .team__titel a::after {
+  .sticker__titel a::after {
     content: '';
     position: absolute;
     inset: 0;
   }
-  .team:hover .team__titel a,
-  .team__titel a:focus-visible {
-    text-decoration: underline;
-    text-decoration-thickness: 3px;
-    text-decoration-color: var(--rot-hell);
-  }
-  .team__titel a:focus-visible {
+  .sticker__titel a:focus-visible {
     outline: none;
   }
-  .team:has(a:focus-visible) {
-    outline: 3px solid var(--rot);
-    outline-offset: 3px;
+  .sticker:has(a:focus-visible) {
+    outline: 3px solid var(--ink);
+    outline-offset: 4px;
   }
-  .team__meta {
-    font-size: 0.9rem;
-    color: var(--on-nacht-2);
+  .sticker__meta {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    color: #f6ddd8;
   }
 </style>

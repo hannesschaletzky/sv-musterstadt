@@ -1,0 +1,96 @@
+---
+// Laufband im Look eines gestrickten Fanschals. Rein dekorativ.
+interface Props {
+  text?: string[];
+}
+const { text = ['SV Musterstadt', 'Rot-Weiß seit 1921', 'Sportpark Am Mühlbach', 'Wir sind Musterstadt'] } = Astro.props;
+const runde = [...text, ...text];
+---
+
+<div class="schal" aria-hidden="true">
+  <div class="schal__band">
+    {
+      [0, 1].map(() => (
+        <ul>
+          {runde.map((t) => (
+            <li>{t}</li>
+          ))}
+        </ul>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .schal {
+    --masche: 14px;
+    position: relative;
+    overflow: hidden;
+    background: var(--rot);
+    color: #fff;
+    border-block: 3px solid var(--ink);
+  }
+  /* Karierte Kante oben und unten, wie bei einem Strickschal */
+  .schal::before,
+  .schal::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: var(--masche);
+    background:
+      repeating-linear-gradient(90deg, #fff 0 var(--masche), var(--rot) var(--masche) calc(var(--masche) * 2));
+    z-index: 1;
+  }
+  .schal::before {
+    top: 0;
+  }
+  .schal::after {
+    bottom: 0;
+    background-position: var(--masche) 0;
+  }
+  .schal__band {
+    display: flex;
+    width: max-content;
+    padding-block: calc(var(--masche) + 0.55rem) calc(var(--masche) + 0.35rem);
+    /* Strickstruktur: feine V-Maschen */
+    background-image: repeating-linear-gradient(75deg, rgb(0 0 0 / 0.06) 0 2px, transparent 2px 6px),
+      repeating-linear-gradient(-75deg, rgb(255 255 255 / 0.05) 0 2px, transparent 2px 6px);
+  }
+  ul {
+    display: flex;
+    flex: none;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  li {
+    display: flex;
+    align-items: center;
+    font-family: var(--font-display-stack);
+    font-weight: 900;
+    font-size: clamp(1.8rem, 1.4rem + 1.8vw, 3rem);
+    line-height: 1;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  li::after {
+    content: '★';
+    margin-inline: 1.5rem;
+    font-size: 0.6em;
+    color: var(--gelb);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .schal__band {
+      animation: laufen 40s linear infinite;
+    }
+    .schal:hover .schal__band {
+      animation-play-state: paused;
+    }
+  }
+  @keyframes laufen {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+</style>

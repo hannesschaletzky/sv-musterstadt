@@ -1,60 +1,201 @@
 ---
-import { Picture } from 'astro:assets';
+// Taktiktafel: Die Elf steht, eine Position ist noch frei
 import Arrow from './Arrow.astro';
-import bild from '../assets/images/schuhe-ball.jpg';
 
 interface Props {
   title?: string;
   text?: string;
 }
 const {
-  title = 'Schuhe schnüren, <span class="akzent">vorbeikommen.</span>',
+  title = 'Uns fehlt noch <span class="akzent">einer.</span>',
   text = 'Probetraining ist bei uns in jeder Mannschaft kostenlos und ohne Anmeldung. Einfach zur Trainingszeit am Platz sein, den Rest klären wir dort.',
 } = Astro.props;
+
+// 4-3-3, Angaben in Prozent der Tafel. Die Neun ist frei.
+const aufstellung = [
+  { nr: 1, x: 50, y: 88 },
+  { nr: 2, x: 84, y: 69 },
+  { nr: 4, x: 62, y: 72 },
+  { nr: 5, x: 38, y: 72 },
+  { nr: 3, x: 16, y: 69 },
+  { nr: 8, x: 72, y: 50 },
+  { nr: 6, x: 50, y: 55 },
+  { nr: 10, x: 28, y: 50 },
+  { nr: 7, x: 80, y: 28 },
+  { nr: 11, x: 20, y: 28 },
+];
 ---
 
 <section class="cta nacht" aria-labelledby="cta-titel">
-  <div class="cta__bild img-frame">
-    <Picture src={bild} alt="" widths={[480, 800, 1200]} sizes="(min-width: 60rem) 40vw, 100vw" formats={['avif', 'webp']} />
-  </div>
-  <div class="cta__text">
-    <span class="eyebrow">Mitmachen</span>
-    <h2 id="cta-titel" class="h2" set:html={title} />
-    <p class="lead">{text}</p>
-    <div class="cta__aktionen">
-      <a href="/mitmachen/" class="btn btn--rot">Mitglied werden <Arrow /></a>
-      <a href="/mannschaften/" class="btn btn--rand">Trainingszeiten</a>
+  <div class="container cta__inner">
+    <div class="cta__text">
+      <span class="eyebrow">Mitmachen</span>
+      <h2 id="cta-titel" class="h2" set:html={title} />
+      <p class="lead">{text}</p>
+      <div class="cta__aktionen">
+        <a href="/mitmachen/" class="btn btn--rot">Mitglied werden <Arrow /></a>
+        <a href="/mannschaften/" class="btn btn--rand">Trainingszeiten</a>
+      </div>
+    </div>
+
+    <div class="taktik" aria-hidden="true">
+      <svg class="taktik__feld" viewBox="0 0 100 125" fill="none">
+        <defs>
+          <radialGradient id="magnet-rot" cx="0.35" cy="0.3" r="0.75">
+            <stop offset="0" stop-color="#d9574a"></stop>
+            <stop offset="0.55" stop-color="#b3261e"></stop>
+            <stop offset="1" stop-color="#7d1a14"></stop>
+          </radialGradient>
+          <radialGradient id="magnet-gelb" cx="0.35" cy="0.3" r="0.75">
+            <stop offset="0" stop-color="#fbe08a"></stop>
+            <stop offset="0.55" stop-color="#f2c230"></stop>
+            <stop offset="1" stop-color="#b98f12"></stop>
+          </radialGradient>
+        </defs>
+        <g class="taktik__linien">
+          <rect x="3" y="3" width="94" height="119"></rect>
+          <path d="M37 3a13 13 0 0 0 26 0"></path>
+          <rect x="22" y="94" width="56" height="28"></rect>
+          <rect x="37" y="111" width="26" height="11"></rect>
+          <path d="M40 94a12 12 0 0 1 20 0"></path>
+          <circle cx="50" cy="104" r="0.8" fill="currentColor"></circle>
+        </g>
+        <g class="taktik__pfeil">
+          <path d="M30 59 C 36 48, 42 41, 46 37" stroke-dasharray="2 2.2"></path>
+          <path d="M42.6 36.6l4-0.6-0.9 3.9"></path>
+        </g>
+        {
+          aufstellung.map((m) => (
+            <g class="magnet" transform={`translate(${m.x} ${m.y * 1.25})`}>
+              <circle r="5.2" fill={m.nr === 1 ? 'url(#magnet-gelb)' : 'url(#magnet-rot)'}></circle>
+              <text y="1.6" text-anchor="middle" fill={m.nr === 1 ? '#141210' : '#fff'}>{m.nr}</text>
+            </g>
+          ))
+        }
+        <g class="magnet magnet--frei" transform="translate(50 27.5)">
+          <circle class="magnet__puls" r="7"></circle>
+          <circle r="7" fill="rgb(0 0 0 / 0.25)"></circle>
+          <text y="2.4" text-anchor="middle">Du?</text>
+        </g>
+      </svg>
+      <p class="taktik__notiz">Sturm, Tor, Abwehr, egal. Hauptsache du.</p>
     </div>
   </div>
 </section>
 
 <style>
   .cta {
-    display: grid;
-    grid-template-columns: 1fr 1.2fr;
-    min-height: 34rem;
+    padding-block: var(--section);
+    overflow: hidden;
   }
-  .cta__bild {
-    border-radius: 0;
+  .cta__inner {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    align-items: center;
+    gap: clamp(2.5rem, 2rem + 4vw, 6rem);
   }
   .cta__text {
     display: grid;
-    align-content: center;
     gap: 1.5rem;
-    padding: var(--section) var(--gutter);
-    max-width: 44rem;
   }
   .cta__aktionen {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.75rem;
+    gap: 1rem;
+  }
+
+  .taktik {
+    position: relative;
+    justify-self: center;
+    width: min(100%, 26rem);
+    padding: 0.7rem;
+    border-radius: 0.5rem;
+    background: linear-gradient(135deg, #e4e2dd, #9d9a93 45%, #d8d5cf 60%, #8d8a83);
+    box-shadow: 0 30px 50px -20px rgb(0 0 0 / 0.8);
+    transform: rotate(-2.5deg);
+  }
+  .taktik__feld {
+    display: block;
+    width: 100%;
+    color: rgb(255 255 255 / 0.85);
+    background:
+      repeating-linear-gradient(180deg, transparent 0 12.5%, rgb(0 0 0 / 0.08) 12.5% 25%),
+      radial-gradient(ellipse at 50% 30%, #2a8a49, var(--rasen-dunkel));
+    border-radius: 0.2rem;
+  }
+  .taktik__linien {
+    stroke: currentColor;
+    stroke-width: 0.7;
+  }
+  .taktik__pfeil {
+    stroke: var(--gelb);
+    stroke-width: 0.9;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .magnet {
+    font-family: var(--font-mono-stack);
+    font-weight: 700;
+    font-size: 4.4px;
+  }
+  .magnet circle:not(.magnet__puls):not([fill^='rgb']) {
+    filter: drop-shadow(0 0.8px 0.6px rgb(0 0 0 / 0.45));
+  }
+  .magnet--frei circle {
+    stroke: var(--gelb);
+    stroke-width: 0.8;
+    stroke-dasharray: 2 1.4;
+  }
+  .magnet--frei text {
+    fill: var(--gelb);
+    font-family: var(--font-display-stack);
+    font-weight: 900;
+    font-size: 6.4px;
+  }
+  .magnet__puls {
+    fill: none;
+    stroke-dasharray: none !important;
+    opacity: 0;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  .taktik__notiz {
+    position: absolute;
+    right: -1.5rem;
+    bottom: -1.75rem;
+    max-width: 13rem;
+    padding: 0.7rem 0.9rem 0.6rem;
+    background: var(--gelb);
+    color: var(--ink);
+    font-family: var(--font-mono-stack);
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1.35;
+    text-transform: uppercase;
+    transform: rotate(5deg);
+    box-shadow: 0 8px 16px -8px rgb(0 0 0 / 0.6);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .magnet__puls {
+      animation: puls 2s var(--ease) infinite;
+    }
+  }
+  @keyframes puls {
+    from {
+      opacity: 0.8;
+      transform: scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: scale(1.8);
+    }
   }
   @media (max-width: 60rem) {
-    .cta {
+    .cta__inner {
       grid-template-columns: 1fr;
     }
-    .cta__bild {
-      aspect-ratio: 16 / 9;
+    .taktik__notiz {
+      right: -0.5rem;
     }
   }
 </style>

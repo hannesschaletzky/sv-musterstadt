@@ -1,0 +1,951 @@
+/* Stil „Plakat“: Schweizer Sportplakat. Helles Papier, eine Grotesk, feine Linien,
+   normale Groß- und Kleinschreibung und der rote Kreis als einziges Motiv.
+   Das doppelte :root hebt die Spezifität über die komponenteneigenen Styles. */
+:root:root[data-stil='plakat'] {
+  --kreide: #f4f3ef;
+  --kreide-2: #e8e6df;
+  --kreide-3: #d8d5cc;
+  --ink: #121212;
+  --ink-2: #3b3b39;
+  --ink-3: #686763;
+  --line: #cfccc3;
+  --rot: #c8281e;
+  --rot-2: #9e1f17;
+  --rot-hell: #ef6a5f;
+  --gelb: #c8281e;
+  --nacht: #121212;
+  --nacht-2: #1f1f1e;
+  --nacht-line: #3a3a38;
+  --on-nacht: #f4f3ef;
+  --on-nacht-2: #a8a7a2;
+  --rasen: #2f7d4a;
+  --schatten: transparent;
+
+  --font-display-stack: var(--font-plakat), 'Helvetica Neue', Arial, sans-serif;
+  --font-body-stack: var(--font-plakat), 'Helvetica Neue', Arial, sans-serif;
+  --font-mono-stack: var(--font-plakat), 'Helvetica Neue', Arial, sans-serif;
+
+  --step-4: clamp(2.6rem, 1.8rem + 4vw, 5.6rem);
+  --step-5: clamp(3.4rem, 1.6rem + 8vw, 9.5rem);
+  --radius: 0px;
+
+  & body::after {
+    display: none;
+  }
+  & h1,
+  & h2,
+  & h3,
+  & h4,
+  & .btn,
+  & .eyebrow,
+  & .mono,
+  & .link-pfeil {
+    text-transform: none;
+  }
+  & h1,
+  & h2,
+  & h3,
+  & h4 {
+    font-weight: 700;
+    letter-spacing: -0.045em;
+    line-height: 0.95;
+  }
+  & ::selection {
+    background: var(--rot);
+    color: #fff;
+  }
+
+  /* Rote Flächen und Seitenköpfe werden hell, Rasterpunkte entfallen */
+  & .rot,
+  & .artikelkopf,
+  & .nf {
+    background-color: var(--kreide);
+    color: var(--ink);
+    --line: var(--ink);
+    --ink-2: #3b3b39;
+    --ink-3: #686763;
+  }
+  & .streifen {
+    background-image: none;
+  }
+
+  & .eyebrow {
+    padding: 0;
+    background: none;
+    color: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0;
+  }
+  & .eyebrow::before,
+  & .rot .eyebrow::before,
+  & .nacht .eyebrow::before {
+    width: 0.6rem;
+    height: 0.6rem;
+    background: var(--rot);
+  }
+  & .nacht .eyebrow,
+  & .on-image .eyebrow {
+    background: none;
+    color: inherit;
+  }
+  & .display {
+    line-height: 0.95;
+  }
+  & .akzent,
+  & .hohl {
+    color: var(--rot);
+    -webkit-text-stroke: 0;
+  }
+  & .nacht .akzent,
+  & .on-image .akzent {
+    color: var(--rot-hell);
+  }
+
+  /* Knöpfe als Pillen */
+  & .btn {
+    padding: 0.85rem 1.4rem;
+    border: 1.5px solid var(--ink);
+    border-radius: 999px;
+    background: var(--ink);
+    color: var(--kreide);
+    box-shadow: none;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0;
+  }
+  & .btn:hover,
+  & .btn:active {
+    transform: none;
+    box-shadow: none;
+    background: var(--rot);
+    border-color: var(--rot);
+    color: #fff;
+  }
+  & .btn--rot,
+  & .btn--gelb,
+  & .rot .btn--rot,
+  & .nacht .btn--rot {
+    background: var(--rot);
+    border-color: var(--rot);
+    color: #fff;
+  }
+  & .btn--rot:hover,
+  & .btn--gelb:hover {
+    background: var(--ink);
+    border-color: var(--ink);
+  }
+  & .btn--rand {
+    background: transparent;
+    border-color: currentColor;
+    color: inherit;
+  }
+  & .btn--rand:hover {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--kreide);
+  }
+  & .nacht .btn--rand:hover,
+  & .on-image .btn--rand:hover {
+    background: var(--on-nacht);
+    border-color: var(--on-nacht);
+    color: var(--nacht);
+  }
+  & .nacht .btn--rot:hover {
+    background: var(--on-nacht);
+    border-color: var(--on-nacht);
+    color: var(--nacht);
+  }
+
+  & .link-pfeil {
+    padding: 0 0 0.1rem;
+    background: none;
+    border-bottom: 1.5px solid currentColor;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0;
+  }
+  & .link-pfeil:hover {
+    color: var(--rot);
+  }
+  & .kopf {
+    border-top: 1.5px solid currentColor;
+    padding-top: 1rem;
+  }
+  & .prose blockquote {
+    padding: 0.2rem 0 0.2rem 1.25rem;
+    background: none;
+    border-left: 3px solid var(--rot);
+    box-shadow: none;
+    transform: none;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+    text-transform: none;
+  }
+
+  /* Kopfzeile */
+  & .demobar {
+    --demobar-bg: var(--ink);
+    --demobar-fg: var(--kreide);
+    font-size: 0.78rem;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  & .ticker {
+    background: var(--kreide-2);
+    color: var(--ink-3);
+    font-size: 0.8rem;
+    letter-spacing: 0;
+    text-transform: none;
+    color-scheme: light;
+  }
+  & .ticker__spiel,
+  & .ticker__paarung {
+    color: var(--ink);
+  }
+  & .ticker__label,
+  & .ticker__stand {
+    color: var(--ink-3);
+  }
+  & .ticker__punkt {
+    box-shadow: none;
+  }
+  & .header {
+    border-bottom: 1px solid var(--ink);
+  }
+  & .header__nav a {
+    padding: 0.5rem 0.85rem;
+    border-radius: 999px;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    text-transform: none;
+  }
+  & .header__nav a:hover {
+    background: var(--kreide-2);
+    color: var(--ink);
+  }
+  & .header__nav a[aria-current='page'] {
+    background: var(--ink);
+    color: var(--kreide);
+  }
+  & .header__nr,
+  & .header__nav a:hover .header__nr {
+    color: var(--ink-3);
+    font-weight: 600;
+  }
+  & .header__nav a[aria-current='page'] .header__nr {
+    color: var(--rot-hell);
+  }
+  & .header__cta,
+  & .header__cta:hover {
+    padding: 0.75rem 1.25rem;
+    border: 0;
+    border-radius: 999px;
+    background: var(--rot);
+    color: #fff;
+    box-shadow: none;
+    transform: none;
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: none;
+  }
+  & .header__cta:hover {
+    background: var(--ink);
+  }
+  & .header__toggle {
+    border: 1.5px solid var(--ink);
+    border-radius: 50%;
+    background: none;
+    box-shadow: none;
+  }
+  & .header__toggle span {
+    height: 1.5px;
+    left: 0.7rem;
+    right: 0.7rem;
+  }
+  & .header__toggle span:nth-child(2) {
+    right: 0.7rem;
+  }
+  & .menu li {
+    border-top: 1px solid var(--line);
+  }
+  & .menu li a {
+    font-weight: 700;
+    letter-spacing: -0.045em;
+    text-transform: none;
+  }
+  & .menu li a::before {
+    font-weight: 600;
+    letter-spacing: 0;
+    color: var(--ink-3);
+  }
+  & .menu li a[aria-current='page'] {
+    color: var(--rot);
+  }
+  & .menu__close {
+    border-width: 1.5px;
+    border-radius: 50%;
+  }
+  & .logo__name {
+    font-weight: 700;
+    font-size: 1.4rem;
+    letter-spacing: -0.035em;
+    line-height: 1;
+    text-transform: none;
+  }
+  & .logo__jahr {
+    font-weight: 400;
+    font-size: 0.75rem;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  /* Startseite: der rote Kreis als Sonne hinter der Eintrittskarte */
+  & .hero::before {
+    content: '';
+    position: absolute;
+    right: -6vw;
+    bottom: -8vw;
+    width: clamp(18rem, 42vw, 40rem);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--rot);
+  }
+  & .hero__masthead {
+    border-bottom: 1px solid var(--ink);
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  & .hero__titel {
+    letter-spacing: -0.055em;
+    line-height: 0.9;
+  }
+  & .hero__zeile {
+    justify-content: flex-start;
+    gap: 0.12em;
+    font-size: clamp(2.6rem, 9.5vw, 8.8rem);
+  }
+  & .hero__zeile--gross {
+    font-size: clamp(3.2rem, 14vw, 12.8rem);
+    color: var(--ink);
+  }
+  /* Das Foto wird zum Kreis zwischen den Wörtern */
+  & .hero__foto {
+    flex: none;
+    width: 0.82em;
+    height: 0.82em;
+    min-width: 0;
+    border: 0;
+    border-radius: 50%;
+    transform: none;
+  }
+  & .hero__text .lead {
+    color: var(--ink-2);
+    font-weight: 400;
+  }
+  & .hero__zahlen dd {
+    color: var(--ink);
+    font-weight: 700;
+    letter-spacing: -0.05em;
+  }
+  & .hero__zahlen dt {
+    color: var(--ink-3);
+    font-size: 0.8rem;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  & .hero__stempel {
+    border: 0;
+    background: var(--ink);
+    color: var(--kreide);
+    box-shadow: none;
+  }
+  & .hero__stempel text {
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: none;
+  }
+  & .hero__stempel > span {
+    color: var(--rot-hell);
+  }
+
+  /* Eintrittskarte: schlicht, ohne Schräglage und Kerben */
+  & .ticket,
+  & .ticket:hover {
+    background: #fff;
+    box-shadow: 0 24px 50px -24px rgb(0 0 0 / 0.45);
+    transform: none;
+  }
+  & .ticket__haupt {
+    border: 0;
+  }
+  & .ticket__kopf {
+    border-bottom: 1px solid var(--ink);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  & .ticket__paarung {
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    text-transform: none;
+  }
+  & .ticket__gegen {
+    font-weight: 400;
+    font-size: 0.85rem;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--ink-3);
+  }
+  & .ticket__daten {
+    font-size: 0.85rem;
+  }
+  & .ticket__daten dt {
+    text-transform: none;
+  }
+  & .ticket__daten dd {
+    font-weight: 600;
+  }
+  & .ticket__abriss {
+    background: #fff;
+    border: 0;
+    border-left: 1px dashed var(--ink-3);
+  }
+  & .ticket__abriss::before,
+  & .ticket__abriss::after {
+    display: none;
+  }
+  & .ticket__preis {
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    color: var(--rot);
+  }
+  & .ticket__saison {
+    font-weight: 400;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--ink-3);
+  }
+
+  /* Laufband als feine Zeile */
+  & .schal {
+    background: var(--kreide);
+    color: var(--ink);
+    border-block: 1px solid var(--ink);
+  }
+  & .schal::before,
+  & .schal::after {
+    display: none;
+  }
+  & .schal__band {
+    padding-block: 0.9rem 0.8rem;
+    background-image: none;
+  }
+  & .schal li {
+    font-weight: 600;
+    font-size: clamp(1.3rem, 1.1rem + 1vw, 2rem);
+    letter-spacing: -0.04em;
+    text-transform: none;
+  }
+  & .schal li::after {
+    content: '●';
+    margin-inline: 1.25rem;
+    font-size: 0.45em;
+    color: var(--rot);
+  }
+
+  /* Anzeigetafel: weißes Ergebnisblatt */
+  & .tafel {
+    background: #fff;
+    color: var(--ink);
+    border: 1px solid var(--ink);
+    box-shadow: none;
+    --line: var(--line);
+  }
+  & .tafel::before {
+    display: none;
+  }
+  & .tafel__kopf,
+  & .tafel__fuss {
+    padding-inline: 0;
+    color: var(--ink-3);
+    font-size: 0.85rem;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  & .tafel__label {
+    color: var(--rot);
+    font-weight: 600;
+  }
+  & .tafel__fuss {
+    border-top: 1px solid var(--line);
+  }
+  & .tafel__team {
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    text-transform: none;
+  }
+  & .tafel__stand,
+  & .tafel__stand time {
+    gap: 0;
+  }
+  & .tafel__ziffer {
+    display: flex;
+    min-width: 0;
+    padding: 0;
+    background: none;
+    border: 0;
+    color: var(--ink);
+    font-weight: 700;
+    letter-spacing: -0.05em;
+    text-shadow: none;
+  }
+  & .tafel__ziffer::after {
+    display: none;
+  }
+  & .tafel__ziffer + .tafel__ziffer::before {
+    content: ':';
+    padding-inline: 0.08em;
+    color: var(--rot);
+  }
+  & .tafel .badge--gast {
+    opacity: 1;
+    border-width: 1.5px;
+    font-weight: 600;
+  }
+  & .form__spiel {
+    border: 0;
+    border-radius: 50%;
+    font-weight: 600;
+  }
+  & .form__spiel--U {
+    background: var(--kreide-3);
+    color: var(--ink);
+  }
+  & .tabelle table {
+    font-family: var(--font-body-stack);
+    border-top: 1.5px solid var(--ink);
+    border-bottom: 1.5px solid var(--ink);
+  }
+  & .tabelle thead th {
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+    border-bottom: 1px solid var(--ink);
+  }
+  & .tabelle .eigen th::after {
+    display: none;
+  }
+  & .tabelle .eigen th::before {
+    content: '●';
+    margin-right: 0.45rem;
+    font-size: 0.6em;
+    vertical-align: 0.15em;
+  }
+  & .legende,
+  & .spieltag__form,
+  & .spieltag__platz {
+    text-transform: none;
+    font-size: 0.85rem;
+  }
+
+  /* Meldungen */
+  & .bote__kopf {
+    text-align: left;
+  }
+  & .bote__zeile {
+    font-size: 0.85rem;
+    text-transform: none;
+  }
+  & .bote__titel {
+    letter-spacing: -0.06em;
+  }
+  & .news__bild {
+    border: 0;
+  }
+  & .news__rubrik {
+    padding: 0.3rem 0.75rem;
+    background: var(--kreide);
+    color: var(--ink);
+    border: 0;
+    border-radius: 999px;
+    transform: none;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  & .news__meta {
+    font-size: 0.85rem;
+    text-transform: none;
+  }
+  & .news__titel {
+    letter-spacing: -0.04em;
+    line-height: 1;
+  }
+  & .news--gross .news__titel {
+    font-size: var(--step-3);
+  }
+  & .news:hover .news__titel a,
+  & .news__titel a:focus-visible {
+    background: none;
+    text-decoration: underline;
+    text-decoration-color: var(--rot);
+    text-decoration-thickness: 2px;
+  }
+
+  /* Heimspiel als rotes Plakat ohne Foto */
+  & .heimspiel {
+    min-height: 0;
+    background: var(--rot);
+    color: #fff;
+  }
+  & .heimspiel__bild {
+    display: none;
+  }
+  & .heimspiel__titel {
+    font-size: clamp(4rem, 1rem + 12vw, 13rem);
+    letter-spacing: -0.06em;
+    line-height: 0.85;
+  }
+  & .heimspiel .akzent {
+    color: var(--ink);
+  }
+  & .heimspiel__text .lead {
+    color: #fff;
+  }
+  & .heimspiel .btn--rand:hover {
+    background: #fff;
+    border-color: #fff;
+    color: var(--rot);
+  }
+  & .heimspiel__preis {
+    background: var(--kreide);
+    border: 0;
+    box-shadow: none;
+    transform: none;
+  }
+  & .heimspiel__betrag {
+    font-weight: 700;
+    letter-spacing: -0.05em;
+  }
+  & .heimspiel__preis .mono {
+    font-size: 0.8rem;
+    font-weight: 400;
+    text-transform: none;
+  }
+
+  /* Mannschaften: quadratische Bilder, Bildunterschrift statt Sticker */
+  & .sticker,
+  & .sticker:hover {
+    padding: 0;
+    background: none;
+    border-radius: 0;
+    box-shadow: none;
+    transform: none;
+  }
+  & .sticker__bild {
+    aspect-ratio: 1;
+    border-radius: 0;
+    background: var(--kreide-3);
+  }
+  & .sticker__bild::after {
+    display: none;
+  }
+  & .sticker__nr {
+    border: 0;
+    background: var(--rot);
+    color: #fff;
+    font-weight: 600;
+  }
+  & .sticker__bereich {
+    top: auto;
+    right: auto;
+    left: 0.6rem;
+    bottom: 0.6rem;
+    padding: 0.3rem 0.75rem;
+    background: var(--kreide);
+    color: var(--ink);
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  & .sticker__text {
+    padding: 0.9rem 0 0;
+    background: none;
+    color: var(--ink);
+    border-radius: 0;
+  }
+  & .sticker__titel {
+    letter-spacing: -0.04em;
+    line-height: 1;
+  }
+  & .sticker:hover .sticker__titel a {
+    text-decoration: underline;
+    text-decoration-color: var(--rot);
+    text-decoration-thickness: 2px;
+  }
+  & .sticker__meta {
+    color: var(--ink-3);
+    font-size: 0.85rem;
+    text-transform: none;
+  }
+
+  /* Sponsoren als Raster mit Haarlinien */
+  & .bande {
+    background: var(--kreide);
+    border-top: 1px solid var(--ink);
+    padding-bottom: calc(var(--section) * 0.6);
+  }
+  & .bande__reihe {
+    gap: 1px;
+    padding: 0;
+    width: calc(100% - var(--gutter) * 2);
+    max-width: calc(var(--max) - var(--gutter) * 2);
+    margin-inline: auto;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+  & .bande__tafel,
+  & .bande__tafel:nth-child(n) {
+    background: var(--kreide);
+    color: var(--ink);
+  }
+  & .bande__tafel--haupt,
+  & .bande__tafel--haupt:nth-child(n) {
+    background: var(--rot);
+    color: #fff;
+  }
+  & .bande__rolle {
+    color: #fff;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  & .bande__rasen {
+    display: none;
+  }
+
+  /* Mitmachen: Taktiktafel als grafisches Schema */
+  & .taktik {
+    padding: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+    transform: none;
+  }
+  & .taktik__feld {
+    background: var(--kreide);
+    color: var(--ink);
+    border-radius: 0;
+  }
+  & .taktik__linien {
+    stroke-width: 0.4;
+  }
+  & .taktik__pfeil {
+    stroke: var(--rot);
+  }
+  & .magnet {
+    font-family: var(--font-plakat);
+    font-weight: 600;
+  }
+  & .magnet circle:not(.magnet__puls):not([fill^='rgb']) {
+    fill: var(--rot);
+    filter: none;
+  }
+  & .magnet circle[fill='url(#magnet-gelb)'] {
+    fill: var(--ink);
+  }
+  & .magnet text {
+    fill: #fff;
+  }
+  & .magnet--frei circle {
+    fill: none;
+    stroke: var(--rot);
+    stroke-width: 0.5;
+  }
+  & .magnet--frei text {
+    fill: var(--rot);
+    font-family: var(--font-plakat);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+  }
+  & .taktik__notiz {
+    background: var(--rot);
+    color: #fff;
+    box-shadow: none;
+    transform: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: none;
+  }
+
+  /* Seitenkopf: Papier, feine Linie, roter Kreis */
+  & .intro {
+    margin-bottom: 0;
+    overflow: hidden;
+    background-color: var(--kreide);
+    border-bottom: 1px solid var(--ink);
+  }
+  & .intro::after {
+    display: none;
+  }
+  & .intro::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: max(var(--gutter), calc((100vw - var(--max)) / 2 + var(--gutter)));
+    width: clamp(9rem, 22vw, 20rem);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--rot);
+    transform: translateY(-50%);
+  }
+  & .intro__inner {
+    position: relative;
+    padding-right: calc(clamp(9rem, 22vw, 20rem) + var(--gutter));
+  }
+  & .intro .display {
+    font-size: clamp(3rem, 1.5rem + 5.5vw, 7rem);
+  }
+  & .artikelkopf,
+  & .nf {
+    border-bottom: 1px solid var(--ink);
+    color-scheme: light;
+    --nacht: var(--kreide);
+    --nacht-2: var(--kreide-2);
+    --nacht-line: var(--line);
+    --on-nacht: var(--ink);
+    --on-nacht-2: #686763;
+  }
+
+  /* Fußzeile hell */
+  & .footer {
+    background: var(--kreide-2);
+    color: var(--ink);
+    border-top: 1px solid var(--ink);
+    color-scheme: light;
+    --line: var(--ink);
+    --ink-2: #3b3b39;
+    --ink-3: #686763;
+  }
+  & .footer__claim {
+    font-weight: 700;
+    letter-spacing: -0.05em;
+    line-height: 0.95;
+    text-transform: none;
+  }
+  & .footer__grid {
+    border-top: 1px solid var(--ink);
+  }
+  & .footer__title {
+    padding: 0;
+    background: none;
+    color: var(--ink-3);
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0;
+  }
+  & .footer__muted,
+  & .footer dt {
+    color: var(--ink-3);
+  }
+  & .footer nav a {
+    font-size: 1.15rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    text-transform: none;
+  }
+  & .footer__riese {
+    color: var(--ink);
+    font-weight: 700;
+    letter-spacing: -0.06em;
+    text-transform: none;
+  }
+  & .footer__bottom {
+    border-top: 1px solid var(--ink);
+    color: var(--ink-3);
+    font-size: 0.8rem;
+    text-transform: none;
+  }
+  & .footer__bottom a {
+    color: var(--ink);
+  }
+  & .footer :focus-visible {
+    outline-color: var(--rot);
+  }
+
+  /* Einzelne Seiten */
+  & .krumen a {
+    border-radius: 999px;
+    background: var(--rot);
+    color: #fff;
+    padding: 0.35rem 0.8rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: none;
+  }
+  & .krumen {
+    text-transform: none;
+    font-weight: 600;
+  }
+  & .ergebnis {
+    border: 0;
+    border-radius: 999px;
+    font-weight: 600;
+  }
+  & .ergebnis--U {
+    background: var(--kreide-3);
+    color: var(--ink);
+  }
+  & .spiele thead th {
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  & .filter span {
+    border-width: 1.5px;
+    border-radius: 999px;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  @media (max-width: 60rem) {
+    & .hero::before {
+      bottom: -6rem;
+    }
+  }
+  @media (max-width: 30rem) {
+    & .ticket__abriss {
+      border-left: 0;
+      border-top: 1px dashed var(--ink-3);
+    }
+  }
+  @media (max-width: 64rem) {
+    & .bande__reihe {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 40rem) {
+    & .intro::before {
+      width: 6rem;
+      top: 2.5rem;
+      transform: none;
+    }
+    & .intro__inner {
+      padding-right: var(--gutter);
+      padding-top: 9.5rem;
+    }
+  }
+}

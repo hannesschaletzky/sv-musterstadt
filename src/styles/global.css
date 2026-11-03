@@ -1,36 +1,42 @@
+/* Gestaltungsidee: Stadionheft. Zeitungspapier, gedecktes Vereinsrot, Schwarz und Flutlicht-Gelb,
+   dazu eine Stadionschrift für Überschriften und eine Monospace für alles, was gezählt wird. */
 :root {
-  --kreide: #f6f4ef;
-  --kreide-2: #ece8df;
-  --kreide-3: #dfd9cd;
-  --ink: #14171c;
-  --ink-2: #3c4149;
-  --ink-3: #5c626c;
-  --line: #d8d2c6;
-  --rot: #c8102e;
-  --rot-2: #a20c24;
-  --rot-hell: #ff6b7f;
-  --nacht: #0e1217;
-  --nacht-2: #181e26;
-  --nacht-line: #2b333e;
-  --on-nacht: #eef0f2;
-  --on-nacht-2: #a7aeb8;
-  --rasen: #2d7a43;
+  --kreide: #f1ece0;
+  --kreide-2: #e7dfcd;
+  --kreide-3: #d9cfb9;
+  --ink: #141210;
+  --ink-2: #36312a;
+  --ink-3: #5c554b;
+  --line: #cbc0a8;
+  --rot: #b3261e;
+  --rot-2: #8f1d16;
+  --rot-hell: #e4715f;
+  --gelb: #f2c230;
+  --nacht: #141210;
+  --nacht-2: #211e1a;
+  --nacht-line: #3b3630;
+  --on-nacht: #f4f0e6;
+  --on-nacht-2: #b4ab9b;
+  --rasen: #1f7a3d;
+  --rasen-dunkel: #17502b;
+  --schatten: var(--ink);
 
   --font-display-stack: var(--font-display), 'Arial Narrow', sans-serif;
   --font-body-stack: var(--font-body), system-ui, sans-serif;
+  --font-mono-stack: var(--font-mono), ui-monospace, monospace;
 
   --step--1: clamp(0.84rem, 0.82rem + 0.1vw, 0.9rem);
   --step-0: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
   --step-1: clamp(1.2rem, 1.12rem + 0.4vw, 1.45rem);
-  --step-2: clamp(1.55rem, 1.35rem + 1vw, 2.2rem);
-  --step-3: clamp(2rem, 1.6rem + 2vw, 3.3rem);
-  --step-4: clamp(2.5rem, 1.8rem + 3.4vw, 4.8rem);
-  --step-5: clamp(3.2rem, 2rem + 6vw, 7.6rem);
+  --step-2: clamp(1.6rem, 1.38rem + 1.1vw, 2.4rem);
+  --step-3: clamp(2.1rem, 1.6rem + 2.4vw, 3.8rem);
+  --step-4: clamp(2.8rem, 1.9rem + 4.2vw, 6rem);
+  --step-5: clamp(3.6rem, 2rem + 8vw, 10rem);
 
   --gutter: clamp(1rem, 0.5rem + 2.5vw, 2.5rem);
   --section: clamp(4rem, 2.8rem + 6vw, 8rem);
-  --max: 80rem;
-  --radius: 3px;
+  --max: 82rem;
+  --radius: 0px;
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
 
   color-scheme: light;
@@ -64,6 +70,18 @@ body {
   overflow-x: clip;
 }
 
+/* Papierkorn über der ganzen Seite */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  pointer-events: none;
+  opacity: 0.07;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
 img,
 picture,
 svg {
@@ -77,8 +95,8 @@ h2,
 h3,
 h4 {
   font-family: var(--font-display-stack);
-  font-weight: 800;
-  line-height: 0.95;
+  font-weight: 900;
+  line-height: 0.9;
   text-transform: uppercase;
   margin: 0;
   text-wrap: balance;
@@ -91,7 +109,7 @@ p {
 
 a {
   color: inherit;
-  text-decoration-thickness: 1px;
+  text-decoration-thickness: 2px;
   text-underline-offset: 0.2em;
 }
 
@@ -101,13 +119,14 @@ a {
 }
 
 .nacht :focus-visible,
+.rot :focus-visible,
 .on-image :focus-visible {
-  outline-color: var(--on-nacht);
+  outline-color: var(--gelb);
 }
 
 ::selection {
-  background: var(--rot);
-  color: #fff;
+  background: var(--gelb);
+  color: var(--ink);
 }
 
 .container {
@@ -131,44 +150,77 @@ a {
   --line: var(--nacht-line);
   --ink-2: var(--on-nacht-2);
   --ink-3: var(--on-nacht-2);
+  --schatten: var(--rot);
   color-scheme: dark;
+}
+
+.rot {
+  background: var(--rot);
+  color: #fff;
+  --line: rgb(255 255 255 / 0.35);
+  --ink-2: #fff;
+  --ink-3: #f6ddd8;
+  --schatten: var(--ink);
 }
 
 .getoent {
   background: var(--kreide-2);
 }
 
-/* Tabellenziffern überall dort, wo gezählt wird */
+.mono,
 .zahlen,
 time,
 table {
   font-variant-numeric: tabular-nums lining-nums;
 }
 
+.mono {
+  font-family: var(--font-mono-stack);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+/* Kleines Etikett wie ein Stempel im Stadionheft */
 .eyebrow {
   display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
-  font-family: var(--font-display-stack);
-  font-size: var(--step-0);
-  font-weight: 600;
+  gap: 0.5rem;
+  justify-self: start;
+  align-self: start;
+  width: fit-content;
+  padding: 0.3rem 0.55rem 0.25rem;
+  background: var(--ink);
+  color: var(--kreide);
+  font-family: var(--font-mono-stack);
+  font-size: 0.78rem;
+  font-weight: 700;
   line-height: 1.3;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--rot);
 }
 
 .eyebrow::before {
   content: '';
-  width: 0.7rem;
-  height: 0.7rem;
-  background: currentColor;
-  transform: skewX(-14deg);
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--rot);
 }
 
 .nacht .eyebrow,
 .on-image .eyebrow {
-  color: var(--rot-hell);
+  background: var(--gelb);
+  color: var(--ink);
+}
+
+.rot .eyebrow::before,
+.nacht .eyebrow::before,
+.on-image .eyebrow::before {
+  background: var(--ink);
+}
+
+.rot .eyebrow::before {
+  background: var(--gelb);
 }
 
 .lead {
@@ -180,17 +232,18 @@ table {
 
 .display {
   font-size: var(--step-5);
-  line-height: 0.88;
-  letter-spacing: -0.01em;
+  line-height: 1;
+  letter-spacing: -0.005em;
 }
 
 .h2 {
   font-size: var(--step-4);
+  line-height: 0.95;
 }
 
 .h3 {
   font-size: var(--step-2);
-  line-height: 1;
+  line-height: 0.95;
 }
 
 .akzent {
@@ -199,34 +252,58 @@ table {
 
 .nacht .akzent,
 .on-image .akzent {
-  color: var(--rot-hell);
+  color: var(--gelb);
+}
+
+/* Hohle Buchstaben für das zweite Wort einer Schlagzeile */
+.hohl {
+  color: transparent;
+  -webkit-text-stroke: 0.035em var(--ink);
+}
+
+.rot .hohl,
+.nacht .hohl {
+  -webkit-text-stroke-color: #fff;
 }
 
 .btn {
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
-  padding: 0.85rem 1.4rem 0.8rem;
-  border-radius: var(--radius);
+  padding: 0.8rem 1.3rem 0.7rem;
+  border: 2px solid var(--ink);
+  border-radius: 0;
+  background: var(--kreide);
+  color: var(--ink);
+  box-shadow: 4px 4px 0 var(--schatten);
   font-family: var(--font-display-stack);
-  font-size: var(--step-0);
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-size: 1.2rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   text-decoration: none;
-  line-height: 1.2;
-  border: 2px solid transparent;
+  line-height: 1.1;
   cursor: pointer;
   transition:
-    background-color 0.2s var(--ease),
-    color 0.2s var(--ease),
-    border-color 0.2s var(--ease);
+    transform 0.15s var(--ease),
+    box-shadow 0.15s var(--ease),
+    background-color 0.2s var(--ease);
 }
 
 .btn svg {
   width: 1rem;
   height: 1rem;
   transition: transform 0.2s var(--ease);
+}
+
+.btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--schatten);
+}
+
+.btn:active {
+  transform: translate(3px, 3px);
+  box-shadow: 1px 1px 0 var(--schatten);
 }
 
 .btn:hover svg {
@@ -238,38 +315,44 @@ table {
   color: #fff;
 }
 
-.btn--rot:hover {
-  background: var(--rot-2);
+.btn--gelb,
+.rot .btn--rot {
+  background: var(--gelb);
+  color: var(--ink);
 }
 
 .btn--rand {
+  background: transparent;
+  color: inherit;
   border-color: currentColor;
 }
 
-.btn--rand:hover {
-  background: var(--ink);
-  border-color: var(--ink);
-  color: var(--kreide);
+.nacht .btn--rot {
+  border-color: var(--rot);
+  --schatten: var(--gelb);
 }
 
-.nacht .btn--rand:hover,
-.on-image .btn--rand:hover {
-  background: var(--on-nacht);
-  border-color: var(--on-nacht);
-  color: var(--nacht);
+.nacht .btn--rand,
+.on-image .btn--rand {
+  --schatten: var(--gelb);
 }
 
+/* Textlink mit Textmarker-Strich */
 .link-pfeil {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  font-family: var(--font-display-stack);
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  padding: 0.2rem 0.15rem 0.1rem;
+  font-family: var(--font-mono-stack);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   text-decoration: none;
-  border-bottom: 2px solid var(--rot);
-  padding-bottom: 0.15rem;
+  background: linear-gradient(var(--gelb), var(--gelb)) 0 100% / 100% 0.45em no-repeat;
+  transition:
+    background-size 0.2s var(--ease),
+    color 0.2s var(--ease);
 }
 
 .link-pfeil svg {
@@ -278,16 +361,24 @@ table {
   transition: transform 0.2s var(--ease);
 }
 
+.link-pfeil:hover {
+  background-size: 100% 100%;
+  color: var(--ink);
+}
+
 .link-pfeil:hover svg {
   transform: translateX(3px);
 }
 
+/* Abschnittskopf mit doppelter Linie wie im Zeitungssatz */
 .kopf {
   display: flex;
   flex-wrap: wrap;
   align-items: end;
   justify-content: space-between;
   gap: 1.5rem 3rem;
+  padding-top: 1.25rem;
+  border-top: 7px double currentColor;
   margin-bottom: clamp(2rem, 1.5rem + 2vw, 3.5rem);
 }
 
@@ -313,8 +404,8 @@ table {
   left: 1rem;
   top: -4rem;
   z-index: 100;
-  background: var(--ink);
-  color: var(--kreide);
+  background: var(--gelb);
+  color: var(--ink);
   padding: 0.75rem 1rem;
 }
 
@@ -345,20 +436,19 @@ table {
 }
 
 .hover-zoom img {
-  transition: transform 0.8s var(--ease);
+  transition:
+    transform 0.8s var(--ease),
+    filter 0.4s var(--ease);
 }
 
 .hover-zoom:hover img {
   transform: scale(1.04);
 }
 
-/* Diagonale Streifen wie auf dem Trikot */
+/* Rasterpunkte wie im Offsetdruck */
 .streifen {
-  background-image: repeating-linear-gradient(
-    -55deg,
-    transparent 0 22px,
-    color-mix(in srgb, currentColor 6%, transparent) 22px 44px
-  );
+  background-image: radial-gradient(color-mix(in srgb, currentColor 16%, transparent) 1.3px, transparent 1.8px);
+  background-size: 11px 11px;
 }
 
 /* Fließtext aus Markdown */
@@ -407,14 +497,20 @@ table {
 
 .prose blockquote {
   margin: 1.8em 0;
-  padding: 0.2rem 0 0.2rem 1.25rem;
-  border-left: 4px solid var(--rot);
+  padding: 1rem 1.25rem 0.9rem;
+  background: var(--gelb);
+  box-shadow: 5px 5px 0 var(--ink);
   font-family: var(--font-display-stack);
   font-size: var(--step-2);
-  font-weight: 600;
-  line-height: 1.1;
+  font-weight: 900;
+  line-height: 1;
   text-transform: uppercase;
   color: var(--ink);
+  transform: rotate(-0.6deg);
+}
+
+.prose blockquote p {
+  color: inherit;
 }
 
 .prose table {

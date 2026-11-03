@@ -32,10 +32,10 @@ const lang = { S: 'Sieg', U: 'Unentschieden', N: 'Niederlage' };
     place-items: center;
     width: 2rem;
     height: 2rem;
-    border-radius: var(--radius);
-    font-family: var(--font-display-stack);
-    font-weight: 800;
-    font-size: 1.05rem;
+    border: 2px solid var(--ink);
+    font-family: var(--font-mono-stack);
+    font-weight: 700;
+    font-size: 0.9rem;
     color: #fff;
   }
   abbr {
@@ -45,7 +45,8 @@ const lang = { S: 'Sieg', U: 'Unentschieden', N: 'Niederlage' };
     background: var(--rasen);
   }
   .form__spiel--U {
-    background: #6b7280;
+    background: var(--kreide);
+    color: var(--ink);
   }
   .form__spiel--N {
     background: var(--rot-2);

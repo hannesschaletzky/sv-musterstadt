@@ -1,0 +1,869 @@
+/* Stil „Flutlicht“: dunkle Flächen, Signalrot, schmale Sportschrift, Trikotstreifen.
+   Gleiches Markup wie Stadionheft, nur andere Haut. Das doppelte :root hebt die Spezifität
+   über die komponenteneigenen Styles, damit diese Datei sie zuverlässig überschreibt. */
+:root:root[data-stil='flutlicht'] {
+  --kreide: #f6f4ef;
+  --kreide-2: #ece8df;
+  --kreide-3: #dfd9cd;
+  --ink: #14171c;
+  --ink-2: #3c4149;
+  --ink-3: #5c626c;
+  --line: #d8d2c6;
+  --rot: #c8102e;
+  --rot-2: #a20c24;
+  --rot-hell: #ff6b7f;
+  --gelb: #ff6b7f;
+  --nacht: #0e1217;
+  --nacht-2: #181e26;
+  --nacht-line: #2b333e;
+  --on-nacht: #eef0f2;
+  --on-nacht-2: #a7aeb8;
+  --rasen: #2d7a43;
+
+  --font-display-stack: var(--font-flutlicht-display), 'Arial Narrow', sans-serif;
+  --font-body-stack: var(--font-flutlicht-body), system-ui, sans-serif;
+  --font-mono-stack: var(--font-flutlicht-body), system-ui, sans-serif;
+
+  --step-2: clamp(1.55rem, 1.35rem + 1vw, 2.2rem);
+  --step-3: clamp(2rem, 1.6rem + 2vw, 3.3rem);
+  --step-4: clamp(2.5rem, 1.8rem + 3.4vw, 4.8rem);
+  --step-5: clamp(3.2rem, 2rem + 6vw, 7.6rem);
+  --max: 80rem;
+  --radius: 3px;
+
+  & body::after {
+    display: none;
+  }
+  & h1,
+  & h2,
+  & h3,
+  & h4 {
+    font-weight: 800;
+    line-height: 0.95;
+  }
+  & ::selection {
+    background: var(--rot);
+    color: #fff;
+  }
+
+  /* Rote Flächen des Stadionhefts werden hier zu Nachtflächen */
+  & .rot {
+    background-color: var(--nacht);
+    color: var(--on-nacht);
+    --line: var(--nacht-line);
+    --ink-2: var(--on-nacht-2);
+    --ink-3: var(--on-nacht-2);
+  }
+  & .streifen,
+  & .menu,
+  & .intro,
+  & .hero {
+    background-image: repeating-linear-gradient(-55deg, transparent 0 22px, color-mix(in srgb, currentColor 6%, transparent) 22px 44px);
+    background-size: auto;
+  }
+
+  & .eyebrow {
+    padding: 0;
+    background: none;
+    color: var(--rot);
+    font-family: var(--font-display-stack);
+    font-size: var(--step-0);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+  }
+  & .eyebrow::before {
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 0;
+    background: currentColor;
+    transform: skewX(-14deg);
+  }
+  & .nacht .eyebrow,
+  & .rot .eyebrow,
+  & .on-image .eyebrow {
+    background: none;
+    color: var(--rot-hell);
+  }
+  & .display {
+    line-height: 0.92;
+  }
+  & .akzent,
+  & .hohl {
+    color: var(--rot);
+    -webkit-text-stroke: 0;
+  }
+  & .nacht .akzent,
+  & .rot .akzent,
+  & .nacht .hohl,
+  & .on-image .akzent {
+    color: var(--rot-hell);
+  }
+
+  & .btn {
+    padding: 0.85rem 1.4rem 0.8rem;
+    border: 2px solid transparent;
+    border-radius: var(--radius);
+    background: transparent;
+    color: inherit;
+    box-shadow: none;
+    font-size: var(--step-0);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+  }
+  & .btn:hover,
+  & .btn:active {
+    transform: none;
+    box-shadow: none;
+  }
+  & .btn--rot,
+  & .btn--gelb,
+  & .rot .btn--rot,
+  & .nacht .btn--rot {
+    background: var(--rot);
+    border-color: var(--rot);
+    color: #fff;
+  }
+  & .btn--rot:hover,
+  & .btn--gelb:hover {
+    background: var(--rot-2);
+    border-color: var(--rot-2);
+  }
+  & .btn--rand {
+    border-color: currentColor;
+  }
+  & .btn--rand:hover {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--kreide);
+  }
+  & .nacht .btn--rand:hover,
+  & .rot .btn--rand:hover,
+  & .on-image .btn--rand:hover {
+    background: var(--on-nacht);
+    border-color: var(--on-nacht);
+    color: var(--nacht);
+  }
+
+  & .link-pfeil {
+    padding: 0 0 0.15rem;
+    background: none;
+    border-bottom: 2px solid var(--rot);
+    font-family: var(--font-display-stack);
+    font-size: var(--step-0);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+  }
+  & .link-pfeil:hover {
+    color: inherit;
+  }
+  & .kopf {
+    padding-top: 0;
+    border-top: 0;
+  }
+  & .prose blockquote {
+    padding: 0.2rem 0 0.2rem 1.25rem;
+    background: none;
+    border-left: 4px solid var(--rot);
+    box-shadow: none;
+    transform: none;
+    font-weight: 600;
+    line-height: 1.1;
+  }
+
+  /* Kopfzeile */
+  & .demobar {
+    --demobar-bg: var(--nacht);
+    --demobar-fg: var(--on-nacht);
+    font-family: var(--font-body-stack);
+    font-size: 0.8rem;
+    letter-spacing: 0.02em;
+    text-transform: none;
+  }
+  & .ticker {
+    display: none;
+  }
+  & .header {
+    background: color-mix(in srgb, var(--kreide) 90%, transparent);
+    backdrop-filter: blur(14px) saturate(1.3);
+    -webkit-backdrop-filter: blur(14px) saturate(1.3);
+    border-bottom: 3px solid var(--rot);
+  }
+  & .header__nav ul {
+    gap: 1.9rem;
+  }
+  & .header__nav a,
+  & .header__nav a:hover,
+  & .header__nav a[aria-current='page'] {
+    position: relative;
+    padding: 0.5rem 0;
+    background: none;
+    color: inherit;
+    font-size: 1.15rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+  }
+  & .header__nav a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0.15rem;
+    height: 3px;
+    background: var(--rot);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s var(--ease);
+  }
+  & .header__nav a:hover::after,
+  & .header__nav a[aria-current='page']::after {
+    transform: scaleX(1);
+  }
+  & .header__nr {
+    display: none;
+  }
+  & .header__cta,
+  & .header__cta:hover {
+    padding: 0.85rem 1.4rem 0.8rem;
+    background: var(--rot);
+    color: #fff;
+    border: 0;
+    border-radius: var(--radius);
+    box-shadow: none;
+    transform: none;
+    font-size: var(--step-0);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+  }
+  & .header__cta:hover {
+    background: var(--rot-2);
+  }
+  & .header__toggle {
+    border: 0;
+    background: none;
+    box-shadow: none;
+  }
+  & .header__toggle span {
+    height: 2px;
+  }
+  & .menu li {
+    border-top: 0;
+    border-bottom: 1px solid var(--nacht-line);
+  }
+  & .menu li a {
+    font-weight: 800;
+    font-size: 2.6rem;
+  }
+  & .menu li a::before {
+    font-family: var(--font-display-stack);
+    font-weight: 600;
+    color: var(--on-nacht-2);
+  }
+  & .menu li a[aria-current='page'] {
+    color: var(--rot-hell);
+  }
+  & .menu__close {
+    border: 0;
+  }
+  & .logo__name {
+    font-weight: 800;
+    font-size: 1.45rem;
+    line-height: 1;
+  }
+  & .logo__jahr {
+    font-weight: 600;
+    font-size: 0.7rem;
+    letter-spacing: 0.16em;
+  }
+
+  /* Startseite: geteilter Kopf mit Bild rechts */
+  & .hero {
+    min-height: min(88vh, 54rem);
+  }
+  & .hero__inner {
+    position: static;
+    align-content: center;
+    min-height: inherit;
+    padding-block: clamp(3rem, 2rem + 5vw, 6rem) 0;
+    padding-right: calc(42vw - (100vw - min(100vw, var(--max))) / 2 + var(--gutter) * 2);
+  }
+  & .hero__masthead {
+    justify-content: start;
+    padding: 0;
+    border: 0;
+    color: var(--rot-hell);
+    font-family: var(--font-display-stack);
+    font-size: var(--step-0);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+  }
+  & .hero__masthead span:first-child {
+    display: none;
+  }
+  & .hero__masthead span + span::before {
+    content: '· ';
+  }
+  & .hero__masthead span:nth-child(2)::before {
+    content: '';
+    display: inline-block;
+    width: 0.7rem;
+    height: 0.7rem;
+    margin-right: 0.6rem;
+    background: currentColor;
+    transform: skewX(-14deg);
+  }
+  & .hero__titel {
+    display: block;
+    font-size: var(--step-5);
+    line-height: 0.92;
+  }
+  & .hero__zeile {
+    display: block;
+    font-size: inherit;
+    margin: 0;
+  }
+  & .hero__zeile--gross {
+    color: var(--rot-hell);
+  }
+  & .hero__foto {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 42vw;
+    height: auto;
+    border: 0;
+    border-radius: 0;
+    transform: none;
+  }
+  & .hero__foto img {
+    object-position: 50% 70%;
+  }
+  & .hero__unten {
+    grid-template-columns: 1fr;
+    position: static;
+  }
+  & .hero__stempel,
+  & .hero .ticket {
+    display: none;
+  }
+  & .hero__text .lead {
+    color: var(--on-nacht-2);
+    font-weight: 400;
+  }
+  & .hero__zahlen {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    margin: 1rem 0 0;
+    border-top: 1px solid var(--nacht-line);
+  }
+  & .hero__zahlen div {
+    padding: 1.4rem 1rem 1.6rem 0;
+  }
+  & .hero__zahlen div + div {
+    padding-left: 1.25rem;
+    border-left: 1px solid var(--nacht-line);
+  }
+  & .hero__zahlen dd {
+    font-weight: 800;
+    color: var(--on-nacht);
+  }
+  & .hero__zahlen dt {
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    color: var(--on-nacht-2);
+  }
+
+  /* Laufband: schmales rotes Band statt Strickschal */
+  & .schal {
+    background: var(--rot);
+    border: 0;
+  }
+  & .schal::before,
+  & .schal::after {
+    display: none;
+  }
+  & .schal__band {
+    padding-block: 0.7rem 0.55rem;
+    background-image: none;
+  }
+  & .schal li {
+    font-weight: 800;
+    font-size: 1.5rem;
+  }
+  & .schal li::after {
+    content: '/';
+    color: rgb(255 255 255 / 0.5);
+    font-size: 1em;
+  }
+
+  /* Anzeigetafel */
+  & .tafel {
+    border: 0;
+    border-top: 5px solid var(--rot);
+    border-radius: var(--radius);
+    box-shadow: none;
+  }
+  & .tafel::before {
+    display: none;
+  }
+  & .tafel__kopf {
+    font-family: var(--font-display-stack);
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    padding-inline: 0;
+  }
+  & .tafel__label {
+    color: var(--rot-hell);
+    font-weight: 600;
+  }
+  & .tafel__fuss {
+    padding-inline: 0;
+    border-top-style: solid;
+    font-size: 0.85rem;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  & .tafel__team {
+    font-weight: 600;
+  }
+  & .tafel__stand,
+  & .tafel__stand time {
+    gap: 0;
+  }
+  & .tafel__stand {
+    padding: 0.4rem 0.9rem 0.2rem;
+    background: var(--nacht-2);
+    border-radius: var(--radius);
+  }
+  & .tafel__ziffer {
+    display: flex;
+    position: relative;
+    min-width: 0;
+    padding: 0;
+    background: none;
+    border: 0;
+    font-family: var(--font-display-stack);
+    font-weight: 800;
+    color: var(--on-nacht);
+    text-shadow: none;
+  }
+  & .tafel__ziffer::after {
+    display: none;
+  }
+  & .tafel__ziffer + .tafel__ziffer::before {
+    content: ':';
+    padding-inline: 0.12em;
+    color: var(--rot-hell);
+  }
+  & .form__spiel {
+    border: 0;
+    border-radius: var(--radius);
+    font-family: var(--font-display-stack);
+    font-weight: 800;
+    font-size: 1.05rem;
+  }
+  & .form__spiel--U {
+    background: #6b7280;
+    color: #fff;
+  }
+  & .tabelle table {
+    font-family: var(--font-body-stack);
+    font-size: 0.95rem;
+    border-top: 0;
+    border-bottom: 0;
+  }
+  & .tabelle thead th {
+    font-family: var(--font-display-stack);
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.08em;
+    border-bottom-width: 2px;
+  }
+  & .tabelle .platz {
+    border-left-width: 4px;
+  }
+  & .tabelle .eigen {
+    background: color-mix(in srgb, var(--rot) 10%, transparent);
+    color: inherit;
+  }
+  & .tabelle .eigen th,
+  & .tabelle .eigen td {
+    border-bottom-color: var(--line);
+  }
+  & .tabelle .eigen th::after {
+    display: none;
+  }
+  & .legende {
+    font-family: var(--font-body-stack);
+    font-size: 0.85rem;
+    text-transform: none;
+  }
+  & .spieltag__platz {
+    font-size: var(--step-0);
+    text-transform: none;
+    color: var(--ink-3);
+  }
+  & .spieltag__platz-nr {
+    width: auto;
+    height: auto;
+    background: none;
+    color: inherit;
+    font-family: var(--font-body-stack);
+    font-size: inherit;
+    font-weight: 400;
+  }
+  & .spieltag__form {
+    font-size: 0.9rem;
+    text-transform: none;
+    color: var(--ink-3);
+  }
+
+  /* Meldungen */
+  & .bote__kopf {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: end;
+    gap: 1.5rem 3rem;
+    text-align: left;
+  }
+  & .bote__zeile {
+    padding: 0;
+    border: 0;
+  }
+  & .bote__zeile:first-child,
+  & .bote__zeile:last-child span {
+    display: none;
+  }
+  & .bote__titel {
+    font-size: var(--step-4);
+    line-height: 0.95;
+  }
+  & .bote__raster {
+    column-gap: 2rem;
+  }
+  & .bote__raster > :not(:first-child) {
+    padding-left: 0;
+    border-left: 0;
+  }
+  & .bote__raster > :first-child {
+    padding-right: 0;
+  }
+  & .bote__raster > :nth-child(3) {
+    padding-top: 0;
+    border-top: 0;
+  }
+  & .news__bild {
+    border: 0;
+    border-radius: var(--radius);
+  }
+  & .news__rubrik {
+    padding: 0.15rem 0.5rem 0.1rem;
+    background: var(--rot);
+    color: #fff;
+    border: 0;
+    transform: none;
+    font-family: var(--font-display-stack);
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+  }
+  & .news__meta {
+    font-size: 0.85rem;
+    text-transform: none;
+  }
+  & .news__titel {
+    line-height: 1;
+  }
+  & .news--gross .news__titel {
+    font-size: var(--step-3);
+  }
+  & .news:hover .news__titel a,
+  & .news__titel a:focus-visible {
+    background: none;
+    text-decoration: underline;
+    text-decoration-color: var(--rot);
+    text-decoration-thickness: 3px;
+  }
+
+  /* Heimspiel */
+  & .heimspiel {
+    min-height: 40rem;
+  }
+  & .heimspiel__bild img {
+    filter: none;
+  }
+  & .heimspiel__bild::after {
+    background: linear-gradient(90deg, rgb(10 12 16 / 0.85) 0%, rgb(10 12 16 / 0.55) 55%, rgb(10 12 16 / 0.15) 100%);
+  }
+  & .heimspiel__titel {
+    font-size: var(--step-5);
+    line-height: 0.92;
+  }
+  & .heimspiel .akzent {
+    color: var(--rot-hell);
+  }
+  & .heimspiel__preis {
+    position: static;
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    width: auto;
+    aspect-ratio: auto;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+    color: var(--on-nacht);
+    text-align: left;
+    transform: none;
+  }
+  & .heimspiel__betrag {
+    font-size: var(--step-3);
+    color: var(--rot-hell);
+  }
+  & .heimspiel__preis .mono {
+    font-size: 0.9rem;
+    font-weight: 400;
+    text-transform: none;
+  }
+
+  /* Mannschaften: dunkle Karten statt Sticker */
+  & .album__raster {
+    gap: 1.25rem;
+  }
+  & .sticker,
+  & .sticker:hover {
+    padding: 0;
+    background: var(--nacht);
+    color: var(--on-nacht);
+    border-radius: var(--radius);
+    box-shadow: none;
+    transform: none;
+    overflow: hidden;
+  }
+  & .sticker__bild {
+    aspect-ratio: 4 / 3;
+    border-radius: 0;
+  }
+  & .sticker__bild::after,
+  & .sticker__nr,
+  & .sticker__bereich {
+    display: none;
+  }
+  & .sticker__text {
+    padding: 1.1rem 1.25rem 1.3rem;
+    background: none;
+    border-top: 4px solid var(--rot);
+    border-radius: 0;
+  }
+  & .sticker__titel {
+    line-height: 1;
+  }
+  & .sticker:hover .sticker__titel a {
+    text-decoration: underline;
+    text-decoration-thickness: 3px;
+    text-decoration-color: var(--rot-hell);
+  }
+  & .sticker__meta {
+    font-size: 0.9rem;
+    text-transform: none;
+    color: var(--on-nacht-2);
+  }
+  & .sticker:has(a:focus-visible) {
+    outline-color: var(--rot);
+  }
+
+  /* Sponsoren: ruhige Logokacheln */
+  & .bande {
+    padding-block: calc(var(--section) * 0.6);
+    background: none;
+    border-top: 1px solid var(--line);
+    max-width: var(--max);
+    margin-inline: auto;
+  }
+  & .bande__kopf {
+    padding-inline: var(--gutter);
+  }
+  & .bande__reihe {
+    grid-template-columns: 1.4fr repeat(4, 1fr);
+    gap: 1rem;
+    padding: 0 var(--gutter);
+    background: none;
+  }
+  & .bande__tafel {
+    min-height: 7rem;
+    background: none;
+    color: var(--ink);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+  & .bande__tafel--haupt {
+    background: var(--kreide-2);
+  }
+  & .bande__rolle {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    color: var(--rot-2);
+    opacity: 1;
+  }
+  & .bande__rasen {
+    display: none;
+  }
+
+  /* Mitmachen: Taktiktafel flach und ohne Schräglage */
+  & .taktik {
+    padding: 0;
+    border-radius: var(--radius);
+    background: none;
+    transform: none;
+    box-shadow: none;
+  }
+  & .taktik__feld {
+    border-radius: var(--radius);
+  }
+  & .taktik__pfeil,
+  & .magnet--frei circle {
+    stroke: var(--rot-hell);
+  }
+  & .magnet--frei text {
+    fill: var(--rot-hell);
+    font-weight: 800;
+  }
+  & .magnet {
+    font-family: var(--font-display-stack);
+    font-weight: 800;
+    font-size: 5px;
+  }
+  & .taktik__notiz {
+    background: var(--rot);
+    color: #fff;
+    transform: none;
+    font-family: var(--font-body-stack);
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: none;
+  }
+
+  /* Seitenkopf der Unterseiten */
+  & .intro {
+    margin-bottom: 0;
+    background-color: var(--nacht);
+    color: var(--on-nacht);
+    border-bottom: 6px solid var(--rot);
+    --ink-2: var(--on-nacht-2);
+  }
+  & .intro::after {
+    display: none;
+  }
+  & .intro .eyebrow {
+    color: var(--rot-hell);
+  }
+  & .intro h1 em {
+    color: var(--rot-hell);
+  }
+
+  /* Fußzeile */
+  & .footer__claim {
+    font-weight: 800;
+    line-height: 0.9;
+  }
+  & .footer__grid {
+    border-top: 1px solid var(--line);
+    padding-block: 3.5rem;
+  }
+  & .footer__title {
+    padding: 0;
+    background: none;
+    color: var(--on-nacht-2);
+    font-family: var(--font-display-stack);
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+  }
+  & .footer nav a {
+    font-family: var(--font-body-stack);
+    font-size: 1rem;
+    font-weight: 400;
+    text-transform: none;
+  }
+  & .footer__riese {
+    display: none;
+  }
+  & .footer__bottom {
+    margin-bottom: 2rem;
+    font-family: var(--font-body-stack);
+    font-size: 0.85rem;
+    text-transform: none;
+  }
+
+  /* Einzelne Seiten */
+  & .krumen a {
+    padding: 0;
+    background: none;
+    color: var(--rot-hell);
+    font-family: var(--font-display-stack);
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+  }
+  & .krumen {
+    font-family: var(--font-display-stack);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+  }
+  & .ergebnis {
+    border: 0;
+    border-radius: var(--radius);
+    font-family: var(--font-display-stack);
+    font-weight: 800;
+    font-size: 1.15rem;
+  }
+  & .ergebnis--U {
+    background: #6b7280;
+    color: #fff;
+  }
+  & .spiele thead th {
+    font-family: var(--font-display-stack);
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.08em;
+  }
+
+  @media (max-width: 60rem) {
+    & .hero {
+      min-height: 0;
+      padding-top: 62vw;
+    }
+    & .hero__inner {
+      padding-right: var(--gutter);
+      padding-bottom: 2rem;
+    }
+    & .hero__foto {
+      bottom: auto;
+      left: 0;
+      width: auto;
+      height: 62vw;
+    }
+  }
+  @media (max-width: 64rem) {
+    & .bande__reihe {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 40rem) {
+    & .hero__zahlen {
+      grid-template-columns: 1fr 1fr;
+    }
+    & .hero__zahlen div:nth-child(odd) {
+      padding-left: 0;
+      border-left: 0;
+    }
+    & .hero__zahlen div:nth-child(n + 3) {
+      border-top: 1px solid var(--nacht-line);
+    }
+  }
+}

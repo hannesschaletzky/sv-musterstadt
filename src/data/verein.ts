@@ -29,6 +29,15 @@ export const navigation = [
   { href: '/sponsoren/', label: 'Sponsoren' },
 ];
 
+// Designvarianten auf denselben Inhalten. Umschalten über ?stil=… oder den Schalter in der Demo-Leiste.
+// Der erste Eintrag ist der Standard. Stadionheft ist die Basis aller Stile, steht aber nicht mehr im Schalter.
+export const stile = [
+  { id: 'schlicht', label: 'Schlicht', imSchalter: true },
+  { id: 'flutlicht', label: 'Flutlicht', imSchalter: true },
+  { id: 'plakat', label: 'Plakat', imSchalter: true },
+  { id: 'stadionheft', label: 'Stadionheft', imSchalter: false },
+] as const;
+
 export const ersteller = {
   name: 'Hannes Schaletzky',
   url: 'https://hschaletzky.com',

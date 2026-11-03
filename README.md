@@ -16,6 +16,22 @@ Beispielwebsite eines fiktiven Fußballvereins. Sie ist eine Referenz für den W
 - Ausgeliefert von Caddy in einem schlanken Container, Deployment über das
   [hschaletzky-infra](https://github.com/hannesschaletzky/hschaletzky-infra)-Repo
 
+## Drei Designs, ein Inhalt
+
+Die Seite gibt es in drei Stilen, umschaltbar in der Demo-Leiste oder per Link:
+
+| Stil        | Link                 | Idee                                                          |
+| ----------- | -------------------- | ------------------------------------------------------------- |
+| Schlicht    | `/?stil=schlicht`    | Weiß, Systemschrift, normale Größen, feine Linien (Standard)  |
+| Flutlicht   | `/?stil=flutlicht`   | Dunkel und sportlich, Trikotstreifen, schmale Sportschrift    |
+| Plakat      | `/?stil=plakat`      | Schweizer Plakatstil: hell, eine Grotesk, roter Kreis         |
+
+Alle Stile teilen Markup, Inhalte und Daten. Die Basis in `global.css` und den Komponenten ist der Stil
+„Stadionheft“ (Fanzine mit Eintrittskarte, Fanschal und Stickern). Er steht nicht mehr im Schalter, ist aber über
+`/?stil=stadionheft` erreichbar. Die drei sichtbaren Stile sind je eine Datei in `src/styles/stile/`, die über
+`<html data-stil="…">` greift. Ein kleines Inline-Skript im `<head>` setzt den Stil vor dem ersten Zeichnen und merkt
+ihn sich (`localStorage`). Ohne JavaScript gilt Schlicht. Welche Stile es gibt, steht in `stile` in `src/data/verein.ts`.
+
 ## Entwicklung
 
 ```sh
@@ -34,7 +50,7 @@ npm run build        # statische Seite nach dist/
 | Sponsoren                 | `src/data/sponsoren.ts`                                |
 | Mannschaften              | `src/content/mannschaften/*.md`                        |
 | Meldungen                 | `src/content/aktuelles/*.md`                           |
-| Farben, Typografie        | `src/styles/global.css` (`:root`)                      |
+| Farben, Typografie        | `src/styles/global.css` (`:root`), Stile in `src/styles/stile/` |
 | Fotos                     | `src/assets/images/` (+ Bildnachweis in `verein.ts`)   |
 
 Ergebnis eintragen: in `saison.ts` beim Spiel `[eigene, gegnerische]` Tore ergänzen und die Tabellenzeile anpassen.

@@ -11,43 +11,44 @@ const { spiel, label } = Astro.props;
 const ergebnis = tore(spiel);
 const ort = spiel.heim ? heimspielort : `Auswärts bei ${spiel.gegner}`;
 const ausgangText = spiel.ergebnis && { S: 'Sieg', U: 'Unentschieden', N: 'Niederlage' }[ausgang(spiel.ergebnis)];
+const zeit = uhrzeit(spiel.anstoss).split(':');
 ---
 
-<div class="karte" role="group" aria-label={`${label}: ${heimTeam(spiel)} gegen ${gastTeam(spiel)}`}>
-  <header class="karte__kopf">
-    <span>{label}</span>
+<div class="tafel" role="group" aria-label={`${label}: ${heimTeam(spiel)} gegen ${gastTeam(spiel)}`}>
+  <header class="tafel__kopf mono">
+    <span class="tafel__label">{label}</span>
     <span>{spiel.spieltag}. Spieltag</span>
   </header>
 
-  <div class="karte__paarung">
-    <div class="karte__team">
+  <div class="tafel__paarung">
+    <div class="tafel__team">
       <Badge verein={heimTeam(spiel)} />
       <span>{heimTeam(spiel)}</span>
     </div>
     {
       ergebnis ? (
-        <p class="karte__stand zahlen">
+        <p class="tafel__stand">
           <span class="visually-hidden">{`Endstand ${ergebnis[0]} zu ${ergebnis[1]}, ${ausgangText} für den SV Musterstadt`}</span>
-          <span aria-hidden="true">
-            {ergebnis[0]}
-            <span class="karte__doppelpunkt">:</span>
-            {ergebnis[1]}
-          </span>
+          <span class="tafel__ziffer" aria-hidden="true">{ergebnis[0]}</span>
+          <span class="tafel__ziffer" aria-hidden="true">{ergebnis[1]}</span>
         </p>
       ) : (
-        <p class="karte__stand karte__stand--zeit zahlen">
+        <p class="tafel__stand tafel__stand--zeit">
           <span class="visually-hidden">Anstoß um</span>
-          <time datetime={spiel.anstoss.toISOString()}>{uhrzeit(spiel.anstoss)}</time>
+          <time datetime={spiel.anstoss.toISOString()}>
+            <span class="tafel__ziffer">{zeit[0]}</span>
+            <span class="tafel__ziffer">{zeit[1]}</span>
+          </time>
         </p>
       )
     }
-    <div class="karte__team">
+    <div class="tafel__team">
       <Badge verein={gastTeam(spiel)} />
       <span>{gastTeam(spiel)}</span>
     </div>
   </div>
 
-  <footer class="karte__fuss">
+  <footer class="tafel__fuss mono">
     <time datetime={spiel.anstoss.toISOString()}>{langesDatum(spiel.anstoss)}, {uhrzeit(spiel.anstoss)} Uhr</time>
     <span>{ort}</span>
     <span>{liga}</span>
@@ -55,71 +56,107 @@ const ausgangText = spiel.ergebnis && { S: 'Sieg', U: 'Unentschieden', N: 'Niede
 </div>
 
 <style>
-  .karte {
+  .tafel {
+    position: relative;
     display: grid;
-    gap: 1.5rem;
+    gap: 1.4rem;
     padding: clamp(1.25rem, 1rem + 1.5vw, 2rem);
     background: var(--nacht);
     color: var(--on-nacht);
-    border-radius: var(--radius);
-    border-top: 5px solid var(--rot);
+    border: 3px solid var(--ink);
+    box-shadow:
+      inset 0 0 0 6px var(--nacht-2),
+      6px 6px 0 var(--rot);
     --badge: clamp(3rem, 2.4rem + 2vw, 4.25rem);
   }
-  .karte__kopf,
-  .karte__fuss {
+  /* Nieten in den Ecken */
+  .tafel::before {
+    content: '';
+    position: absolute;
+    inset: 0.7rem;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 4px 4px, #6b645a 2.5px, transparent 3px) 0 0 / 100% 100% no-repeat,
+      radial-gradient(circle at calc(100% - 4px) 4px, #6b645a 2.5px, transparent 3px) 0 0 / 100% 100% no-repeat,
+      radial-gradient(circle at 4px calc(100% - 4px), #6b645a 2.5px, transparent 3px) 0 0 / 100% 100% no-repeat,
+      radial-gradient(circle at calc(100% - 4px) calc(100% - 4px), #6b645a 2.5px, transparent 3px) 0 0 / 100% 100% no-repeat;
+  }
+  .tafel__kopf,
+  .tafel__fuss {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     gap: 0.25rem 1.25rem;
-    font-size: 0.85rem;
-    color: var(--on-nacht-2);
-  }
-  .karte__kopf {
-    font-family: var(--font-display-stack);
-    font-weight: 600;
-    font-size: 1rem;
-    letter-spacing: 0.12em;
+    font-size: 0.75rem;
     text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--on-nacht-2);
+    padding-inline: 0.75rem;
   }
-  .karte__kopf span:first-child {
-    color: var(--rot-hell);
+  .tafel__label {
+    color: var(--gelb);
+    font-weight: 700;
   }
-  .karte__paarung {
+  .tafel__paarung {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
     gap: 1rem;
   }
-  .karte__team {
+  .tafel__team {
     display: grid;
     justify-items: center;
     gap: 0.75rem;
     text-align: center;
     font-family: var(--font-display-stack);
-    font-weight: 600;
-    font-size: clamp(1rem, 0.9rem + 0.5vw, 1.3rem);
-    line-height: 1.05;
+    font-weight: 900;
+    font-size: clamp(1.1rem, 0.95rem + 0.7vw, 1.55rem);
+    line-height: 0.95;
     text-transform: uppercase;
   }
-  .karte__stand {
-    font-family: var(--font-display-stack);
-    font-weight: 800;
-    font-size: clamp(2.6rem, 2rem + 3vw, 4.5rem);
-    line-height: 1;
-    padding: 0.4rem 0.9rem 0.2rem;
-    background: var(--nacht-2);
-    border-radius: var(--radius);
-    white-space: nowrap;
+  .tafel__stand,
+  .tafel__stand time {
+    display: flex;
+    gap: 0.35rem;
   }
-  .karte__stand--zeit {
+  /* Leuchtziffern mit Punktraster wie auf der Stadionuhr */
+  .tafel__ziffer {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-width: 1.15em;
+    padding: 0.12em 0.12em 0.02em;
+    background: #050505;
+    border: 1px solid var(--nacht-line);
+    font-family: var(--font-mono-stack);
+    font-weight: 700;
+    font-size: clamp(2.6rem, 2rem + 3vw, 4.4rem);
+    line-height: 1;
+    color: var(--gelb);
+    text-shadow:
+      0 0 12px rgb(242 194 48 / 0.55),
+      0 0 2px rgb(242 194 48 / 0.9);
+  }
+  .tafel__ziffer::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(transparent 1px, #050505 1.6px) 0 0 / 4px 4px;
+    opacity: 0.55;
+  }
+  .tafel__stand--zeit .tafel__ziffer {
     font-size: clamp(2rem, 1.6rem + 2vw, 3.3rem);
   }
-  .karte__doppelpunkt {
-    color: var(--rot-hell);
-    padding-inline: 0.1em;
-  }
-  .karte__fuss {
+  .tafel__fuss {
     padding-top: 1.1rem;
-    border-top: 1px solid var(--nacht-line);
+    border-top: 1px dashed var(--nacht-line);
+  }
+  @media (max-width: 30rem) {
+    .tafel__paarung {
+      gap: 0.5rem;
+    }
+    .tafel__ziffer {
+      font-size: 2.2rem;
+    }
   }
 </style>

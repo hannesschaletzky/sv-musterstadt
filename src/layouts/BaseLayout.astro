@@ -1,12 +1,15 @@
 ---
 import '../styles/global.css';
+import '../styles/stile/schlicht.css';
+import '../styles/stile/flutlicht.css';
+import '../styles/stile/plakat.css';
 import { createHash } from 'node:crypto';
 import { Font, getImage } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import DemoBar from '../components/DemoBar.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { verein } from '../data/verein';
+import { verein, stile } from '../data/verein';
 import standardBild from '../assets/images/heimspiel.jpg';
 
 interface Props {
@@ -61,6 +64,11 @@ const brotkrumen = krumen && {
   })),
 };
 
+// Stilvariante vor dem ersten Zeichnen setzen: ?stil=… gewinnt und wird gemerkt, sonst der gemerkte Stil, sonst der erste.
+const ids = JSON.stringify(stile.map((s) => s.id));
+const stilSkript = `(()=>{var s=${ids},d=document.documentElement,p=new URLSearchParams(location.search).get('stil'),v=p;try{if(s.indexOf(p)>-1)localStorage.setItem('stil',p);else v=localStorage.getItem('stil')}catch(e){}if(s.indexOf(v)<0)v=s[0];d.dataset.stil=v;document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('[data-stil-link="'+v+'"]').forEach(function(a){a.setAttribute('aria-current','true')})})})()`;
+Astro.csp?.insertScriptHash(`sha256-${createHash('sha256').update(stilSkript).digest('base64')}`);
+
 // JSON-LD wird nicht ausgeführt, Validatoren werten es aber als Inline-Skript: Hash in die CSP aufnehmen.
 const strukturiert = [club, ...seitenDaten, brotkrumen].filter(Boolean).map((d) => JSON.stringify(d));
 for (const json of strukturiert) {
@@ -69,10 +77,11 @@ for (const json of strukturiert) {
 ---
 
 <!doctype html>
-<html lang="de">
+<html lang="de" data-stil={stile[0].id}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script set:html={stilSkript} />
     <title>{seitenTitel}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
@@ -80,7 +89,7 @@ for (const json of strukturiert) {
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="alternate" type="application/rss+xml" title={`Aktuelles · ${verein.kurzname}`} href="/rss.xml" />
-    <meta name="theme-color" content="#f6f4ef" />
+    <meta name="theme-color" content="#b3261e" />
     <meta name="generator" content={Astro.generator} />
 
     <meta property="og:type" content={type} />
@@ -95,7 +104,11 @@ for (const json of strukturiert) {
     <meta name="twitter:card" content="summary_large_image" />
 
     <Font cssVariable="--font-display" preload />
-    <Font cssVariable="--font-body" preload />
+    <Font cssVariable="--font-body" />
+    <Font cssVariable="--font-mono" />
+    <Font cssVariable="--font-flutlicht-display" />
+    <Font cssVariable="--font-flutlicht-body" />
+    <Font cssVariable="--font-plakat" />
 
     {strukturiert.map((json) => <script type="application/ld+json" set:html={json} />)}
   </head>
