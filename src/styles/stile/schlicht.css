@@ -229,6 +229,9 @@
     letter-spacing: 0;
     text-transform: none;
   }
+  & .stilhinweis {
+    --hinweis-rand: var(--line);
+  }
   & .ticker {
     display: none;
   }

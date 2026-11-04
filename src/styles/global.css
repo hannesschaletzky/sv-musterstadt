@@ -46,6 +46,13 @@
   navigation: auto;
 }
 
+/* Stilwechsel in der Demo-Leiste: das neue Design wird per Kreis aufgedeckt, nicht überblendet */
+:root.stilwechsel::view-transition-old(root),
+:root.stilwechsel::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
 *,
 *::before,
 *::after {
