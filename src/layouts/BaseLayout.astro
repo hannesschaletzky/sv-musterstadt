@@ -111,6 +111,13 @@ for (const json of strukturiert) {
     <Font cssVariable="--font-plakat" />
 
     {strukturiert.map((json) => <script type="application/ld+json" set:html={json} />)}
+
+    <!-- Besucherstatistik ohne Cookies (Plausible von hschaletzky.com), über diese Domain -->
+    <script async src="/js/pa-3EGin9PAcIdHlm-lMqIv7.js"></script>
+    <script is:inline>
+      window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+      plausible.init({ endpoint: '/api/event' });
+    </script>
   </head>
   <body>
     <a class="skip-link" href="#inhalt">Zum Inhalt springen</a>
