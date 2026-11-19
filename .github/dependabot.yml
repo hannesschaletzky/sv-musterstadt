@@ -10,6 +10,11 @@ updates:
     groups:
       npm:
         update-types: [minor, patch]
+    ignore:
+      # TypeScript 7 noch nicht: @astrojs/check (0.9.12) erlaubt als Peer nur typescript ^5 || ^6,
+      # npm ci bricht mit TS 7 an ERESOLVE ab. Wieder freigeben, sobald @astrojs/check TS 7 unterstützt.
+      - dependency-name: typescript
+        versions: [">=7"]
   - package-ecosystem: github-actions
     directory: /
     schedule:
